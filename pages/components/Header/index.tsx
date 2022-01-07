@@ -15,14 +15,13 @@ const Header = () => {
       <NavBarContainer>
         <Logo
           w="100px"
-          color={["white", "white", "primary.500", "primary.500"]}
+          color={["white"]}
         />
         <MenuToggle toggle={toggle} isOpen={isOpen} />
         <Box
           display={{ base: isOpen ? "block" : "none", md: "block" }}
           flexBasis={{ base: "100%", md: "auto" }}
         >
-
           <Stack
             spacing={8}
             align="center"
