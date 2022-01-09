@@ -71,7 +71,7 @@ const Timeline = () => {
   ));
 
   return (
-    <Container maxW={1480} display="flex" justifyContent="space-evenly" p={8} mt={{ sm: "256", md: 18, '2xl': 18}}>
+    <Container id="experience" maxW={1480} display="flex" justifyContent="space-evenly" p={8} mt={{ sm: "256", md: 18, '2xl': 18}}>
       <Flex direction="column" align="center">
         <Heading>
           My Experience

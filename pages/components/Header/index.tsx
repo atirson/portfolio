@@ -29,10 +29,10 @@ const Header = () => {
             direction={["column", "column", "row", "row"]}
             pt={[12, 4, 0, 0]}
           >
-            <MenuItem to="/">Home</MenuItem>
-            <MenuItem to="/how">About</MenuItem>
-            <MenuItem to="/">Skills</MenuItem>
-            <MenuItem to="/how">Contact</MenuItem>
+            <MenuItem to="#about">About</MenuItem>
+            <MenuItem to="#skills">Skills</MenuItem>
+            <MenuItem to="#experience">My Experience</MenuItem>
+            <MenuItem to="#contact">Contact</MenuItem>
           </Stack> 
         </Box>
       </NavBarContainer>

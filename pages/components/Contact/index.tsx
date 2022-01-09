@@ -47,7 +47,7 @@ const Contact = () => {
   }
 
   return (
-    <Container maxW={1480} display="flex" justifyContent="space-evenly" p={8} mt={{ sm: "76", md: 18, '2xl': 18}}>
+    <Container id="contact" maxW={1480} display="flex" justifyContent="space-evenly" p={8} mt={{ sm: "76", md: 18, '2xl': 18}}>
       <Flex as="form" direction="column" align="center" onSubmit={handleSubmit(handleContact)}>
         <Heading >
           Contact Me

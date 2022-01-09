@@ -5,7 +5,7 @@ const Skills = () => {
   const HEIGHT_IMG = 35
 
   return (
-    <Container maxW={1480} display="flex" justifyContent="space-evenly" direction="row" h="300" p={8} mt={{ sm: '586', md: 48, '2xl': 56}}>
+    <Container id="skills" maxW={1480} display="flex" justifyContent="space-evenly" direction="row" h="300" p={8} mt={{ sm: '586', md: 48, '2xl': 56}}>
       <Flex direction="column" align="center">
         <Heading>
           Skills
