@@ -1,69 +1,61 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Container, Heading, Flex, Button } from '@chakra-ui/react'
 import { GrFormAdd as AddIcon } from 'react-icons/gr'
-import { MdSchool as SchoolIcon, MdWork as WorkIcon } from 'react-icons/md'
+import { MdWork as WorkIcon } from 'react-icons/md'
+import { AiFillStar } from 'react-icons/ai'
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
+import { IconType } from 'react-icons';
+import { TIMELINE } from '../../../constants';
 
 type TimelineDataProps = {
+  id: string,
   props: {
     date: string,
     className: string,
     contentStyle: Object,
     contentArrowStyle: Object,
     iconStyle: Object,
-    icon: ReactNode,
+    icon: ReactNode | IconType,
   },
   title: string,
   subtitle: string,
   content: string,
 }
 
-const dataExamples: TimelineDataProps[] = [
-  {
-    props: {
-      date: '2011 - present',
-      className: 'vertical-timeline-element--work',
-      contentStyle: { background: '#000', color: '#fff' },
-      contentArrowStyle: { borderRight: '7px solid  #000' },
-      iconStyle: { background: '#000', color: '#fff' },
-      icon: <WorkIcon />,
-    },
-    title: 'Creative Director',
-    subtitle: 'Miami, FL',
-    content:
-      'Creative Direction, User Experience, Visual Design, Project Management, Team Leading',
-  },
-  {
-    props: {
-      date: '2010 - 2011',
-      className: 'vertical-timeline-element--education',
-      contentStyle: { background: '#4b4d63', color: '#fff' },
-      contentArrowStyle: { borderRight: '7px solid  #4b4d63' },
-      iconStyle: { background: '#4b4d63', color: '#fff' },
-      icon: <SchoolIcon />,
-    },
-    title: 'Content Marketing for Web, Mobile and Social Media',
-    subtitle: 'Online Course',
-    content: 'Strategy, Social Media',
-  },
-];
-
 const Timeline = () => {
-  const [elements, setElements] = useState<TimelineDataProps[]>([]);
+  const [elements, setElements] = useState<TimelineDataProps[]>([
+    {
+      id: '1',
+      props: {
+        date: '2020 - present',
+        className: 'vertical-timeline-element--work',
+        contentStyle: { background: '#000', color: '#fff' },
+        contentArrowStyle: { borderRight: '7px solid  #000' },
+        iconStyle: { background: '#000', color: '#fff' },
+        icon: <WorkIcon />,
+      },
+      title: 'Fullstack Developer',
+      subtitle: 'Squadra Tecnologia',
+      content:
+        `Work to a lot of clients and projects. Using technologies like Node, React, NextJS, TypeScript, PHP, MongoDB, MySQL, Docker, AWS, etc.`,
+    }
+  ]);
 
-  useEffect(() => {
-    loadMore();
-  }, []);
 
   const loadMore = () => {
-    setElements([...elements, ...dataExamples]);
+    const arrayFiltered = TIMELINE.slice(0, elements.length + 2);
+    setElements(arrayFiltered);
   };
 
   const addButton = () => (
-    <Button color="primary" aria-label="add">
-      <AddIcon />
+    elements.length === TIMELINE.length ?
+    <Button _hover={{ backgroundColor: 'green' }} bg="green" ml="2" title="Start">
+      <AiFillStar color="#fff" />
+    </Button>
+    :  
+    <Button bg="white" ml="2" title="Add">
+      <AddIcon color="#000" />
     </Button>
   );
 

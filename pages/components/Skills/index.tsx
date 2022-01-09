@@ -2,7 +2,7 @@ import { Container, Heading, Flex, Image } from '@chakra-ui/react'
 
 const Skills = () => { 
   const WIDTH_IMG = 120
-  const HEIGHT_IMG = 38
+  const HEIGHT_IMG = 35
 
   return (
     <Container maxW={1480} display="flex" justifyContent="space-evenly" direction="row" h="300" p={8} mt={{ sm: 48, md: 48, '2xl': 56}}>
