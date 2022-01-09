@@ -7,7 +7,9 @@ import { Textarea } from "./Textarea"
 
 type ContactFormData = {
   email: string;
-  password: string;
+  name: string;
+  title: string;
+  message: string;
 }
 
 const signInFormSchema = yup.object().shape({
@@ -18,15 +20,30 @@ const signInFormSchema = yup.object().shape({
 })
 
 const Contact = () => {
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, reset } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
   
   const { errors } = formState
 
   const handleContact: SubmitHandler<ContactFormData> = async (values) => {
-    await new Promise(resolve => setTimeout(resolve, 2000))
     console.log(values)
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(values)
+    }).then((res) => {
+      console.log('Response received')
+      if (res.status === 200) {
+        console.log('Response succeeded!')
+        reset(values)
+      }
+    }).catch(err => {
+      console.log(err.message)
+    })
   }
 
   return (
