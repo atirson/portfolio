@@ -50,11 +50,11 @@ const Timeline = () => {
 
   const addButton = () => (
     elements.length === TIMELINE.length ?
-    <Button _hover={{ backgroundColor: 'green' }} bg="green" ml="2" title="Start">
+    <Button _hover={{ backgroundColor: 'green' }} bg="green" ml={{ sm: "0", md: "2", '2xl': "2"}} title="Start">
       <AiFillStar color="#fff" />
     </Button>
     :  
-    <Button bg="white" ml="2" title="Add">
+    <Button bg="white" ml={{ sm: "0", md: "2", '2xl': "2"}} title="Add">
       <AddIcon color="#000" />
     </Button>
   );
@@ -71,15 +71,15 @@ const Timeline = () => {
   ));
 
   return (
-    <Container maxW={1480} display="flex" justifyContent="space-evenly" h="300" p={8} mt={{ sm: 18, md: 18, '2xl': 18}}>
+    <Container maxW={1480} display="flex" justifyContent="space-evenly" h="300" p={8} mt={{ sm: "256", md: 18, '2xl': 18}}>
       <Flex direction="column" align="center">
         <Heading>
           My Experience
         </Heading>
-        <Heading as='h4' size='md' color="gray.200" mt="2">
+        <Heading as='h4' size='md' color="gray.200" mt="2" textAlign="center">
           Timeline about my experience in the field of technology
         </Heading>
-        <div style={{ width: 900, marginTop: 60 }}>
+        <div style={{ marginTop: 60 }}>
           <VerticalTimeline>
             {getTimelineElements()}
             <VerticalTimelineElement

@@ -10,7 +10,8 @@ const NavBarContainer = ({ children, ...props }: any) => {
       w="100%"
       maxW={1480}
       mb={8}
-      p={8}
+      p={{ sm: 4, md: 8, '2xl': 8}}
+      pb={{ sm: 0 }}
       mt={{
         md: 8,
       }}
