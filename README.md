@@ -20,7 +20,7 @@ This project I use different technologies to learn and show what I know and stud
   <li>React Hook Form</li>
   <li>Yup</li>
   <li>Nodemailer</li>
-  <li>React Veritcal Timeline Component</li>
+  <li>React Vertical Timeline Component</li>
   <li>React Toastify</li>
 </ul>
 
