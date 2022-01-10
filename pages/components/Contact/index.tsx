@@ -32,7 +32,7 @@ const Contact = () => {
     }
   })
   
-  const { errors, isSubmitted } = formState
+  const { errors } = formState
 
   const handleContact: SubmitHandler<ContactFormData> = async (values) => {
     axios.post('/api/contact', JSON.stringify(values), {
