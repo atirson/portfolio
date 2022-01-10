@@ -1,9 +1,10 @@
-import { Stack, Box, Flex } from "@chakra-ui/react"
+import { Stack, Box, Flex, Button } from "@chakra-ui/react"
 import { useState } from "react"
 import Logo from "../Logo"
 import MenuItem from "./MenuItem"
 import MenuToggle from './MenuToggle'
 import NavBarContainer from "./NavBarContainer"
+import { AiOutlineCloudDownload } from "react-icons/ai"
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -33,6 +34,12 @@ const Header = () => {
             <MenuItem to="#skills">Skills</MenuItem>
             <MenuItem to="#experience">My Experience</MenuItem>
             <MenuItem to="#contact">Contact</MenuItem>
+            <MenuItem>
+              <Button as="a" bg="white" color="#000" download href="../../assets/CV_ATIRSON.pdf">
+                Download CV
+                <AiOutlineCloudDownload size={25} style={{ marginLeft: 5 }} />
+              </Button>
+            </MenuItem>
           </Stack> 
         </Box>
       </NavBarContainer>
