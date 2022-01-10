@@ -1,34 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+  <h1>Portfolio Project</h1>
+  <img src="./public/assets/header_1.png">
+</div>
 
-## Getting Started
+## Techs
 
-First, run the development server:
+<img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" width={WIDTH_IMG} height={HEIGHT_IMG} alt='NextJS' />
+<img src="https://img.shields.io/badge/typescript%20-%23007ACC.svg?&style=for-the-badge&logo=typescript&logoColor=white" width={WIDTH_IMG} height={HEIGHT_IMG} alt='Typescript' />
+<img src="https://img.shields.io/badge/chakra-%234ED1C5.svg?style=for-the-badge&logo=chakraui&logoColor=white" width={WIDTH_IMG} height={HEIGHT_IMG} alt='Chakra UI' />
 
-```bash
-npm run dev
-# or
-yarn dev
+<br />
+This project I use different technologies to learn and show what I know and study. At page I show my resume using components of React.
+
+<br />
+
+**Libraries emphasis**
+
+<ul>
+  <li>React Hook Form</li>
+  <li>Yup</li>
+  <li>Nodemailer</li>
+  <li>React Veritcal Timeline Component</li>
+  <li>React Toastify</li>
+</ul>
+
+## How to install
+
+**Dependencies**
+
+*Node >= 14.17.0*
+<br />
+*Yarn >= 1.22.17*
+<br />
+*NPM >= 6.14.13*
+
+Clone this repository and inside repo run:
+
+```sh 
+yarn 
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+or
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```sh 
+npm install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+and run:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```sh 
+yarn run dev
+```
 
-## Learn More
+or 
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh 
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can access the using <a href="http://localhost:3000" target="_blank">here</a> : 
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+http://localhost:3000
+```
