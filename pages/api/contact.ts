@@ -27,5 +27,6 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
     else
       console.log(info)
   })
-  res.status(200)
+  
+  return res.status(200).send("Message Sent")
 }

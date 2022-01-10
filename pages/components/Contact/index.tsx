@@ -4,6 +4,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Textarea } from "./Textarea"
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 type ContactFormData = {
   email: string;
@@ -12,7 +14,7 @@ type ContactFormData = {
   message: string;
 }
 
-const signInFormSchema = yup.object().shape({
+const contactFormSchema = yup.object().shape({
   name: yup.string().required('Name Required'),
   email: yup.string().required('E-mail Required').email('Invalid E-mail'),
   title: yup.string().required('Title Required'),
@@ -21,28 +23,29 @@ const signInFormSchema = yup.object().shape({
 
 const Contact = () => {
   const { register, handleSubmit, formState, reset } = useForm({
-    resolver: yupResolver(signInFormSchema)
+    resolver: yupResolver(contactFormSchema),
+    defaultValues: {
+      email: '',
+      name: '',
+      title: '',
+      message: '',
+    }
   })
   
-  const { errors } = formState
+  const { errors, isSubmitted } = formState
 
   const handleContact: SubmitHandler<ContactFormData> = async (values) => {
-    console.log(values)
-    fetch('/api/contact', {
-      method: 'POST',
+    axios.post('/api/contact', JSON.stringify(values), {
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(values)
-    }).then((res) => {
-      console.log('Response received')
-      if (res.status === 200) {
-        console.log('Response succeeded!')
-        reset(values)
       }
+    }).then((res) => {
+      toast.success('Message sent!');
+      reset() 
     }).catch(err => {
       console.log(err.message)
+      return null;
     })
   }
 
