@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import dynamic from 'next/dynamic'
 import React, { ReactNode, useState } from 'react';
 import { Container, Heading, Flex, Button } from '@chakra-ui/react'
 import { GrFormAdd as AddIcon } from 'react-icons/gr'
@@ -6,7 +7,7 @@ import { MdWork as WorkIcon } from 'react-icons/md'
 import { AiFillStar } from 'react-icons/ai'
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import { IconType } from 'react-icons';
-import { TIMELINE } from '../../../constants';
+import { TIMELINE } from '../../constants';
 
 type TimelineDataProps = {
   id: string,
