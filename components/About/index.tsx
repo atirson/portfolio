@@ -5,7 +5,7 @@ import ProfileImg from "./ProfileImg"
 
 const About  = () => {
   return (
-    <Container id="about" maxW={1480} display="flex" justifyContent="space-evenly" direction="row" h="300" p={8} mt={{ sm: 20, md: 20, '2xl': 36}}>
+    <Container id="about" maxW={1480} display="flex" justifyContent="space-evenly" h="300" p={8} mt={{ sm: 20, md: 20, '2xl': 36}}>
       <Flex direction="column" w={25} justify="center" mt={{ sm: 564, md: 2 }}>
         <Link _focus={{outline: 'none'}} href="https://www.linkedin.com/in/atirson-fabiano/" target="_blank" w={25} title="LinkedIn">
           <FiLinkedin size={25} />
