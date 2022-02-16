@@ -9,6 +9,11 @@ import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timel
 import { IconType } from 'react-icons';
 import { TIMELINE } from '../../constants';
 
+// const LazyVoxelDog = dynamic(() => import('react-vertical-timeline-component'), {
+//   ssr: false,
+//   loading: () => <div>Loading...</div>
+// })
+
 type TimelineDataProps = {
   id: string,
   props: {
