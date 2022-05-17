@@ -4,7 +4,22 @@ export const TIMELINE = [
   {
     id: '1',
     props: {
-      date: '2020 - present',
+      date: '2022 - present',
+      className: 'vertical-timeline-element--work',
+      contentStyle: { background: '#000', color: '#fff' },
+      contentArrowStyle: { borderRight: '7px solid  #000' },
+      iconStyle: { background: '#000', color: '#fff' },
+      icon: <WorkIcon />,
+    },
+    title: 'Front-end Developer',
+    subtitle: 'CI&T Software',
+    content:
+      `Working in international project. Development system web using ReactJS, NodeJS, Jest, Azure Devops, Jira, Braze, MongoDB, Segment, New Relic.`,
+  },
+  {
+    id: '2',
+    props: {
+      date: '2020 - 2022',
       className: 'vertical-timeline-element--work',
       contentStyle: { background: '#000', color: '#fff' },
       contentArrowStyle: { borderRight: '7px solid  #000' },
@@ -17,7 +32,7 @@ export const TIMELINE = [
       `Work to a lot of clients and projects. Using technologies like Node, React, NextJS, TypeScript, PHP, MongoDB, MySQL, Docker, AWS, etc.`,
   },
   {
-    id: '2',
+    id: '3',
     props: {
       date: '2021 - present',
       className: 'vertical-timeline-element--education',
@@ -31,7 +46,7 @@ export const TIMELINE = [
     content: `Tutor ReactJS I'm responsable to answer questions of students and give orientation how to fix some problems into universe of ReactJS.`,
   },
   {
-    id: '3',
+    id: '4',
     props: {
       date: '2019 - 2020',
       className: 'vertical-timeline-element--education',
@@ -45,7 +60,7 @@ export const TIMELINE = [
     content: `Development of web pages with Javascript, ReactJS and mobile using React Native and at back-end NodeJs and PHP. During my experience I was use SQLite, MySql and Postgres.`,
   },
   {
-    id: '4',
+    id: '5',
     props: {
       date: '2018 - 2021',
       className: 'vertical-timeline-element--education',

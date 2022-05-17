@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import dynamic from 'next/dynamic'
 import React, { ReactNode, useState } from 'react';
 import { Container, Heading, Flex, Button } from '@chakra-ui/react'
 import { GrFormAdd as AddIcon } from 'react-icons/gr'
@@ -8,11 +7,6 @@ import { AiFillStar } from 'react-icons/ai'
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import { IconType } from 'react-icons';
 import { TIMELINE } from '../../constants';
-
-// const LazyVoxelDog = dynamic(() => import('react-vertical-timeline-component'), {
-//   ssr: false,
-//   loading: () => <div>Loading...</div>
-// })
 
 type TimelineDataProps = {
   id: string,
@@ -34,17 +28,17 @@ const Timeline = () => {
     {
       id: '1',
       props: {
-        date: '2020 - present',
+        date: '2022 - present',
         className: 'vertical-timeline-element--work',
         contentStyle: { background: '#000', color: '#fff' },
         contentArrowStyle: { borderRight: '7px solid  #000' },
         iconStyle: { background: '#000', color: '#fff' },
         icon: <WorkIcon />,
       },
-      title: 'Fullstack Developer',
-      subtitle: 'Squadra Tecnologia',
+      title: 'Front-end Developer',
+      subtitle: 'CI&T Software',
       content:
-        `Work to a lot of clients and projects. Using technologies like Node, React, NextJS, TypeScript, PHP, MongoDB, MySQL, Docker, AWS, etc.`,
+        `Working in international project. Development system web using ReactJS, NodeJS, Jest, Azure Devops, Jira, Braze, MongoDB, Segment, New Relic.`,
     }
   ]);
 
