@@ -29,7 +29,7 @@ const About  = () => {
           </Heading>
           <Text mt="8"  mb="4">
             {`
-              I'm 22 years old and I love everything about technology. 
+              I'm 23 years old and I love everything about technology. 
               At the moment I'm focusing my studies on Node, NextJS, React and React Native with Typescript.
             `}
           </Text>
