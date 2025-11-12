@@ -3,13 +3,18 @@
   "hi": "Oi, eu sou Atirson Fabiano",
   "role1": "Software",
   "role2": "Developer",
-  "about": "Sou um desenvolvedor Front-end com mais de 6 anos de experiência, especializado em construir aplicações escaláveis e de alta performance usando React (NextJS), React Native e TypeScript.\n\nTenho ampla experiência em arquiteturas modernas de front-end, design systems, micro-frontends e otimização de performance. Sou apaixonado por criar experiências de usuário perfeitas, resolver problemas complexos e entregar software de alta qualidade.",
-  "letsChat": "Vamos conversar!",
+  "about": "Sou um desenvolvedor Front-end com mais de {years} anos de experiência, especializado em construir aplicações escaláveis e de alta performance usando React (NextJS), React Native e TypeScript.\n\nTenho ampla experiência em arquiteturas modernas de front-end, design systems, micro-frontends e otimização de performance. Sou apaixonado por criar experiências de usuário perfeitas, resolver problemas complexos e entregar software de alta qualidade.",
+  "letsChat": "💬 Vamos conversar no LinkedIn",
+  "mySkills": "Minhas Habilidades",
   "featuredProjects": "Projetos em destaque",
   "letsWork": "Vamos trabalhar juntos",
   "name": "Nome",
   "message": "Mensagem",
-  "placeholderMessage": "Oi Hailey, vi seu portfólio e adoraria trabalhar/colaborar com você",
+  "placeholderMessage": "Oi Atirson, vi seu portfólio e adoraria trabalhar/colaborar com você",
   "sendMessage": "Enviar mensagem",
-  "downloadResume": "Baixar currículo"
+  "sendingMessage": "Enviando mensagem...",
+  "sentMessage": "Mensagem enviada com sucesso! ✅",
+  "errorSendingMessage": "Erro ao enviar mensagem.",
+  "downloadResume": "Baixar currículo",
+  "seeOnGithub": "Ver no Github"
 }
