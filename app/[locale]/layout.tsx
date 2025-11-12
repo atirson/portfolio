@@ -10,9 +10,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = params;
+  const { locale } = await params;
 
   const isPortuguese = locale === "pt";
 
@@ -62,7 +62,7 @@ export async function generateMetadata({
       ogTitle:
         "Atirson Fabiano | Front-End Specialist with Back-End Experience (Node.js & PHP)",
       ogDescription:
-        "Explore Atirson Fabiano’s portfolio — front-end specialist with back-end experience using Node.js and PHP, focused on building scalable web applications with React and Next.js.",
+        "Explore Atirson Fabiano's portfolio — front-end specialist with back-end experience using Node.js and PHP, focused on building scalable web applications with React and Next.js.",
     },
   };
 
@@ -120,14 +120,14 @@ export async function generateMetadata({
   };
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = params;
+  const { locale } = await params;
 
   return (
     <html lang={locale} suppressHydrationWarning>
