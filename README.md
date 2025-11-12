@@ -32,7 +32,7 @@ A clean, modern personal portfolio built with **Next.js**, **React**, **TypeScri
 
 ### Mobile Preview
 
-![Mobile preview](.github/images/mobile.png)
+<img src=".github/images/mobile.png" alt="Mobile preview" width="375"  />
 
 ---
 
