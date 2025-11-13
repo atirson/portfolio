@@ -94,15 +94,19 @@ export default function HomeClient({
               {aboutText}
             </p>
             <a
-              href="https://www.linkedin.com/in/atirson-fabiano/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full max-w-xs md:max-w-sm h-12 px-8 bg-black rounded-[10px] shadow-md flex items-center justify-center gap-2.5 mt-2 mx-auto lg:mx-0 hover:bg-orange-600 transition-colors"
-            >
-              <span className="text-white text-xl font-medium font-satoshi">
-                {t.letsChat}
-              </span>
-            </a>
+            href="https://www.linkedin.com/in/atirson-fabiano/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={[
+              "w-full max-w-xs md:max-w-sm px-8 bg-black rounded-[10px] shadow-md flex items-center justify-center gap-2.5 mt-2 mx-auto lg:mx-0 hover:bg-orange-600 transition-colors",
+              "h-12",
+              locale === "pt" ? "h-18 md:h-12" : "",
+            ].join(" ")}
+          >
+            <span className="text-white text-xl font-medium font-satoshi">
+              {t.letsChat}
+            </span>
+          </a>
           </div>
 
           <Image
