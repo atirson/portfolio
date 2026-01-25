@@ -57,7 +57,7 @@ const CONFIG = {
   // 🎁 Presentes
   GIFTS: {
     pixKeyMessage: 'Tel: 62 99422-9811 - Ravyla Rachel',
-    pixKeyURL: 'https://pix.app/copia-e-cola/62994229811-ravyla-rachel',
+    pixKeyURL: 'https://nubank.com.br/cobrar/3xpyj/69762c55-6e51-4116-8653-61ff6ddf7851',
     pixKey: '62 99422-9811',
     giftListUrl: 'https://lista.havan.com.br/Convidado/ItensListaPresente/891945#/',
   },
@@ -248,6 +248,51 @@ export default function WeddingPage() {
         .carousel-dot:hover {
           transform: scale(1.2);
         }
+
+        /* Estilos do Tooltip */
+          .tooltip {
+            position: absolute;
+            bottom: 80px; /* Fica acima do botão de 60px */
+            right: 0;
+            background-color: white;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            animation: float 2s ease-in-out infinite;
+            z-index: 1000;
+          }
+
+          /* A setinha do balão */
+          .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+          }
+
+          /* Animação de flutuar */
+          @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+          }
+
+          /* Sua animação de pulso que já estava no botão */
+          .animate-pulse-custom {
+            animation: pulse 2s infinite;
+          }
+
+          @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0.2); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(0,0,0,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+          }
       `}</style>
 
       {/* Elemento de áudio */}
@@ -592,14 +637,21 @@ export default function WeddingPage() {
       </footer>
 
       {/* BOTÃO MÚSICA */}
-      <button
-        onClick={toggleMusic}
-        className={`fixed bottom-8 right-8 w-[60px] h-[60px] border-0 rounded-full cursor-pointer flex items-center justify-center shadow-lg z-[999] transition-all hover:scale-110 hover:rotate-12 ${isPlaying ? 'animate-pulse-custom' : ''}`}
-        style={{ background: `linear-gradient(135deg, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.secondary})` }}
-        title="Controlar Música"
-      >
-        <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-2xl text-white`}></i>
-      </button>
+      <div className="fixed bottom-8 right-8 z-[999]">
+  {!isPlaying && (
+    <div className="tooltip">
+      Clique aqui para uma surpresa! 🎵
+    </div>
+  )}
+  <button
+    onClick={toggleMusic}
+    className={`w-[60px] h-[60px] border-0 rounded-full cursor-pointer flex items-center justify-center shadow-lg transition-all hover:scale-110 hover:rotate-12 ${isPlaying ? 'animate-pulse-custom' : ''}`}
+    style={{ background: `linear-gradient(135deg, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.secondary})` }}
+    title="Controlar Música"
+  >
+    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-2xl text-white`}></i>
+  </button>
+</div>
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     </div>
