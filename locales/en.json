@@ -16,5 +16,172 @@
   "sentMessage": "Message sent successfully! ✅",
   "errorSendingMessage": "Error sending message.",
   "downloadResume": "Download resume",
-  "seeOnGithub": "See on Github"
+  "seeOnGithub": "See on Github",
+  "hero": {
+    "images": [
+      { "src": "/atirson.jpg", "alt": "Atirson Fabiano — Front-End Developer" },
+      { "src": "/atirson-2.jpg", "alt": "Work setup" },
+      { "src": "/atirson-3.jpg", "alt": "Atirson presenting project" }
+    ]
+  },
+  "sections": {
+    "realProjects": "Real Projects",
+    "youtube": "Youtube",
+    "publishedArticles": "Published Articles",
+    "workSetup": "Work Setup"
+  },
+  "realProjects": {
+    "subtitle": "High-impact projects I've developed for companies and clients",
+    "viewProject": "View Project",
+    "projects": [
+      {
+        "id": "vivo-fibra",
+        "title": "Vivo Fibra Residencial",
+        "company": "Vivo",
+        "link": "https://vivo.com.br/para-voce/produtos-e-servicos/planos-lite#/fibra",
+        "description": "Led frontend development from zero to production for Vivo Fibra Lite (credit-card billing — no monthly boletos).",
+        "highlights": [
+          "Designed the frontend architecture and defined best practices for code quality, testing, and performance",
+          "Implemented unit and mutation testing using Jest and Stryker Mutator to increase reliability",
+          "Managed data fetching and caching with React Query for a fast, responsive UX",
+          "Built and maintained CI/CD pipelines with ArgoCD on Kubernetes; used Grafana for monitoring and observability",
+          "Integrated Stackspot AI (Zup) to create agents, knowledge sources and quick commands with VSCode integration",
+          "Collaborated closely with product, backend and DevOps teams to ensure smooth deployments and operability"
+        ],
+        "results": "Achieved 1,000,000+ visits/month and generated over R$100k monthly revenue",
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "React Query",
+          "Jest",
+          "Stryker Mutator",
+          "Grafana",
+          "ArgoCD",
+          "Kubernetes",
+          "Stackspot AI",
+          "VSCode"
+        ]
+      },
+      {
+        "id": "driveway",
+        "title": "Driveway",
+        "company": "Driveway (USA)",
+        "link": "https://www.driveway.com/",
+        "description": "Enhanced the vehicle sales experience by developing high-quality solutions.",
+        "highlights": [
+          "Developed high-quality components for the Design System",
+          "Investigated and fixed bugs, ensuring a stable and reliable platform",
+          "Managed release cycles, ensuring smooth deployments",
+          "Implemented unit and behavioral tests (Jest, Playwright) to maintain code quality"
+        ],
+        "results": "Stable platform with high code quality and improved user experience",
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "Jest",
+          "Playwright",
+          "Design System"
+        ]
+      },
+      {
+        "id": "natura-avon",
+        "title": "Vitrine - Natura & Avon",
+        "company": "Natura/Avon",
+        "link": "https://ciandt.com/br/pt-br/case-study/unificacao-e-inovacao-no-atendimento-consultoras-natura",
+        "description": "Led the development of Vitrine, an advanced system for consultants.",
+        "highlights": [
+          "Optimized performance, quality, and reliability, handling high traffic efficiently",
+          "Scaled the system to support 100K+ requests per minute for 6M active consultants",
+          "Implemented robust architecture to ensure availability and speed",
+          "Collaborated with multidisciplinary teams to deliver a high-impact solution"
+        ],
+        "results": "Scalable system supporting 6 million active consultants with 100K+ requests/minute",
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "Performance Optimization",
+          "High Scalability",
+          "Microservices"
+        ]
+      }
+    ]
+  },
+  "youtube": {
+    "channelName": "@atirson-dev",
+    "visitChannel": "Visit Channel",
+    "channelDescription": "Welcome to Atirson Dev 💻\n\nFocusing on real technology, real projects, and best development practices. No Pokedex clones or purposeless tutorials — the goal is to go beyond the obvious, creating useful and well-structured content to level up your dev skills.",
+    "watchVideo": "Watch Video",
+    "closeVideo": "Close",
+    "videos": [
+      {
+        "id": "iMW9yCc-mYs",
+        "title": "5 Fatal Front-end Interview Mistakes (React/TS/JS) That Get You Rejected Instantly",
+        "description": "You might know React and TypeScript, but these 5 mistakes prove to the interviewer that you don't understand the fundamentals — and that gets candidates rejected immediately.",
+        "thumbnail": "thumb.png"
+      },
+      {
+        "id": "ZBkH64i322o",
+        "title": "Are You Deploying Wrong? Learn These Patterns",
+        "description": "Understand the main Deployment Patterns used in production (Blue-Green, Canary, Rolling, A/B Testing) and how to reduce risks, downtime, and rollbacks in real systems."
+      },
+      {
+        "id": "hBXCRKNzm1g",
+        "title": "How to Create an Ubuntu Server on Orange Pi Zero 3 (Armbian Setup)",
+        "description": "Complete tutorial to transform your Orange Pi Zero 3 into a robust Ubuntu server using Armbian. Perfect for NAS, web servers, and home automation."
+      },
+      {
+        "id": "ITYXA9yIQJY",
+        "title": "Mentorship for Beginners: Your First Programming Job",
+        "description": "A complete guide on mindset, fundamentals, and practice for those seeking their first internship or junior position. Learn how to think like a software engineer."
+      }
+    ]
+  },
+  "articles": {
+    "readMore": "Read full article →",
+    "list": [
+      {
+        "title": "🚀 Being a Dev in 2026: Navigating the Challenges of Tech Modernity",
+        "description": "A reflection on the skills needed for the developer of the future, AI, and the evolution of the software market.",
+        "link": "https://www.linkedin.com/pulse/ser-dev-em-2026-navegando-os-desafios-da-modernidade-atirson-fabiano-ljdvf",
+        "platform": "LinkedIn"
+      },
+      {
+        "title": "The Most easy way to deploy your Micro-frontend React",
+        "description": "A practical guide on simplifying the deployment of micro-frontend architectures using React and top CI/CD tools.",
+        "link": "https://medium.com/@atirson.oliveira/the-most-easy-way-to-deploy-your-micro-frontend-react-677bda39fdfd",
+        "platform": "Medium"
+      },
+      {
+        "title": "Running the KrakenD API Gateway on Heroku",
+        "description": "Step-by-step guide on how to configure and run KrakenD, a high-performance API Gateway, on the Heroku platform.",
+        "link": "https://medium.com/@atirson.oliveira/running-the-krakend-api-gateway-on-heroku-7e10186d07e3",
+        "platform": "Medium"
+      }
+    ]
+  },
+  "workSetup": {
+    "subtitle": "My workspace and productivity tools",
+
+    "categories": {
+      "hardware": "💻 Hardware & Machines",
+      "peripherals": "⌨️ Peripherals & Inputs",
+      "monitors": "🖥️ Display & Visual",
+      "audioVideo": "🎙️ Audio, Video & Light",
+      "furniture": "🪑 Ergonomics & Furniture"
+    },
+    "items": [
+      { "category": "hardware", "emoji": "🍎", "name": "Mac Mini M4", "specs": "Apple Silicon" },
+      { "category": "hardware", "emoji": "🎮", "name": "Dell G15 2023", "specs": "i5 12500h • RTX3050 • 24GB DDR5" },
+      { "category": "peripherals", "emoji": "⌨️", "name": "Logitech 613", "specs": "Wireless Mechanical Keyboard" },
+      { "category": "peripherals", "emoji": "🖱️", "name": "Logitech Master 3S", "specs": "High Precision Mouse" },
+      { "category": "peripherals", "emoji": "🕹️", "name": "8BitDo Ultimate", "specs": "Gaming Controller" },
+      { "category": "monitors", "emoji": "📏", "name": "LG 29\"", "specs": "Main Ultrawide" },
+      { "category": "monitors", "emoji": "📐", "name": "LG 25\"", "specs": "Vertical (Code/Docs)" },
+      { "category": "audioVideo", "emoji": "🎧", "name": "Havit H2015BG", "specs": "Wireless Gaming Headset" },
+      { "category": "audioVideo", "emoji": "🎤", "name": "Fifine AM8", "specs": "Dynamic Microphone" },
+      { "category": "audioVideo", "emoji": "📷", "name": "Emeet 4K Pixy", "specs": "Dual Cam AI" },
+      { "category": "audioVideo", "emoji": "💡", "name": "Blitzwolf Lightbar", "specs": "Monitor Lightbar" },
+      { "category": "furniture", "emoji": "⚡", "name": "Ergodesk Table", "specs": "Electric Adjustment (1.60x0.80)" }
+    ]
+  }
 }

@@ -14,9 +14,13 @@ export async function generateStaticParams() {
 
 const translations = { pt, en };
 
-export default async function Home({ params }: { params: { locale: "pt" | "en" } }) {
-  const { locale } = params;
-  const t = translations[locale] ?? translations["pt"];
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: "pt" | "en" }>;
+}) {
+  const { locale } = await params;
+  const t = translations[locale];
   if (!t?.about) throw new Error("Translation for 'about' not found");
 
   const startYear = 2019;
