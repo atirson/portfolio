@@ -237,7 +237,7 @@ export default function LinktreePage() {
             Então você é Dev ou um saco de batatas? 😉
           </p>
           <a
-            href="asd"
+            href="https://www.linkedin.com/posts/atirson-fabiano_desenvolvimento-dados-linktree-activity-7421881666106867712-lu24?utm_source=share&utm_medium=member_desktop&rcm=ACoAACdiD2gB8vTAFjSemd8urO4QAC_tlP1llWc"
             target="_blank"
             rel="noopener noreferrer"
             className="text-black/50 text-sm font-medium font-satoshi hover:text-orange-600 transition-colors"
