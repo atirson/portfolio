@@ -132,7 +132,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* ✅ Google Analytics 4 com rastreamento global */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-Z36DMC9GRF`}

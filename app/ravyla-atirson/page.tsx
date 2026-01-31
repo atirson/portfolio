@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import QRCode from "react-qr-code";
+import { sendGAEvent } from '@/app/lib/gtag'; // 👈 Importa a função de analytics
 
 // ============================================
 // 🎨 CONFIGURAÇÕES DO SITE (EDITE AQUI)
@@ -92,20 +93,44 @@ export default function WeddingPage() {
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setIsMenuOpen(false);
+      
+      // 📊 Evento: Navegação no menu
+      sendGAEvent('navigation_click', {
+        section: targetId.replace('#', ''),
+        page_location: window.location.href,
+      });
     }
   };
 
   // Funções do Carousel
   const nextPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev + 1) % CONFIG.COUPLE_PHOTOS.length);
+    
+    // 📊 Evento: Próxima foto do carousel
+    sendGAEvent('carousel_next', {
+      photo_index: (currentPhotoIndex + 1) % CONFIG.COUPLE_PHOTOS.length,
+      total_photos: CONFIG.COUPLE_PHOTOS.length,
+    });
   };
 
   const prevPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev - 1 + CONFIG.COUPLE_PHOTOS.length) % CONFIG.COUPLE_PHOTOS.length);
+    
+    // 📊 Evento: Foto anterior do carousel
+    sendGAEvent('carousel_prev', {
+      photo_index: (currentPhotoIndex - 1 + CONFIG.COUPLE_PHOTOS.length) % CONFIG.COUPLE_PHOTOS.length,
+      total_photos: CONFIG.COUPLE_PHOTOS.length,
+    });
   };
 
   const goToPhoto = (index: number) => {
     setCurrentPhotoIndex(index);
+    
+    // 📊 Evento: Clique direto em dot do carousel
+    sendGAEvent('carousel_dot_click', {
+      photo_index: index,
+      total_photos: CONFIG.COUPLE_PHOTOS.length,
+    });
   };
 
   // Auto-play do carousel
@@ -143,6 +168,14 @@ export default function WeddingPage() {
           if (entry.isIntersecting) {
             entry.target.classList.add('opacity-100', 'translate-y-0');
             entry.target.classList.remove('opacity-0', 'translate-y-8');
+            
+            // 📊 Evento: Seção visualizada
+            const sectionId = entry.target.id;
+            if (sectionId) {
+              sendGAEvent('section_view', {
+                section_name: sectionId,
+              });
+            }
           }
         });
       },
@@ -161,10 +194,20 @@ export default function WeddingPage() {
           await audioRef.current.play();
           setIsPlaying(true);
           localStorage.setItem('isMusicPaused', 'false');
+          
+          // 📊 Evento: Música iniciada automaticamente
+          sendGAEvent('music_autoplay', {
+            status: 'success',
+          });
         } catch (error) {
           console.log('Autoplay bloqueado pelo navegador. Clique no botão para tocar.');
           setIsPlaying(false);
           localStorage.setItem('isMusicPaused', 'true');
+          
+          // 📊 Evento: Autoplay bloqueado
+          sendGAEvent('music_autoplay', {
+            status: 'blocked',
+          });
         }
       }
     };
@@ -176,6 +219,11 @@ export default function WeddingPage() {
   const copyPixKey = () => {
     navigator.clipboard.writeText(CONFIG.GIFTS.pixKey).then(() => {
       alert('✅ Chave PIX copiada com sucesso!');
+      
+      // 📊 Evento: Chave PIX copiada
+      sendGAEvent('pix_key_copied', {
+        pix_key: CONFIG.GIFTS.pixKey,
+      });
     });
   };
 
@@ -187,14 +235,47 @@ export default function WeddingPage() {
         audioRef.current.pause();
         setIsPlaying(false);
         localStorage.setItem('isMusicPaused', 'true');
+        
+        // 📊 Evento: Música pausada
+        sendGAEvent('music_control', {
+          action: 'pause',
+        });
       } else {
         await audioRef.current.play();
         setIsPlaying(true);
         localStorage.setItem('isMusicPaused', 'false');
+        
+        // 📊 Evento: Música tocada
+        sendGAEvent('music_control', {
+          action: 'play',
+        });
       }
     } catch (error) {
       console.error('Erro ao controlar áudio:', error);
     }
+  };
+
+  // 📊 Função para rastrear clique no botão "Como Chegar"
+  const handleMapClick = () => {
+    sendGAEvent('map_directions_click', {
+      venue_name: CONFIG.VENUE.name,
+      venue_city: CONFIG.VENUE.city,
+    });
+  };
+
+  // 📊 Função para rastrear clique na lista de presentes
+  const handleGiftListClick = () => {
+    sendGAEvent('gift_list_click', {
+      gift_type: 'online_store',
+      url: CONFIG.GIFTS.giftListUrl,
+    });
+  };
+
+  // 📊 Função para rastrear visualização do QR Code PIX
+  const handlePixQRView = () => {
+    sendGAEvent('pix_qr_view', {
+      pix_key: CONFIG.GIFTS.pixKey,
+    });
   };
 
   return (
@@ -306,7 +387,13 @@ export default function WeddingPage() {
         <nav className="flex justify-center items-center px-8 py-5 md:py-4 max-w-[1400px] mx-auto relative">
           <button
             className="md:hidden absolute right-8 flex flex-col gap-1.5 cursor-pointer"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+              // 📊 Evento: Menu mobile aberto/fechado
+              sendGAEvent('mobile_menu_toggle', {
+                action: !isMenuOpen ? 'open' : 'close',
+              });
+            }}
             aria-label="Menu"
           >
             <span className="w-6 h-0.5 rounded transition-all" style={{ backgroundColor: CONFIG.COLORS.primary }}></span>
@@ -488,7 +575,7 @@ export default function WeddingPage() {
                 <i className="fas fa-info-circle mr-2" style={{ color: CONFIG.COLORS.secondary }}></i>
                 Traje: {CONFIG.VENUE.dresscode}
               </p>
-              <a href={CONFIG.VENUE.mapsLink} target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl" style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}>
+              <a href={CONFIG.VENUE.mapsLink} target="_blank" rel="noopener noreferrer" onClick={handleMapClick} className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl" style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}>
                 <i className="fas fa-directions mr-2"></i> Como Chegar
               </a>
             </div>
@@ -599,7 +686,7 @@ export default function WeddingPage() {
                 <QRCode value={CONFIG.GIFTS.giftListUrl} size={200} className="rounded-2xl shadow-lg" />
               </div>
 
-              <a href={CONFIG.GIFTS.giftListUrl} target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl" style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}>
+              <a href={CONFIG.GIFTS.giftListUrl} target="_blank" rel="noopener noreferrer" onClick={handleGiftListClick} className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl" style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}>
                 <i className="fas fa-shopping-cart mr-2"></i> Acessar Lista
               </a>
             </div>
@@ -612,7 +699,7 @@ export default function WeddingPage() {
               <h3 className="font-cormorant text-4xl mb-4" style={{ color: CONFIG.COLORS.primary }}>PIX</h3>
               <p className="mb-8" style={{ color: CONFIG.COLORS.textDark }}>Contribua via PIX escaneando o QR Code ou copiando a chave abaixo.</p>
 
-              <div className="my-8 flex justify-center">
+              <div className="my-8 flex justify-center" onClick={handlePixQRView}>
                 <QRCode value={CONFIG.GIFTS.pixKeyURL} size={200} className="rounded-2xl shadow-lg" />
               </div>
 

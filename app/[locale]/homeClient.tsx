@@ -5,6 +5,7 @@ import { LanguageSwitch } from "@/app/components/LanguageSwitch";
 import { ContactForm } from "@/app/components/ContactForm";
 import { useAnalytics } from "@/app/hooks/useAnalytics";
 import { useEffect, useState } from "react";
+import { sendGAEvent } from "@/app/lib/gtag";
 
 type Project = {
   id: string;
@@ -57,20 +58,153 @@ export default function HomeClient({
 
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      // 📊 Evento: rotação automática do hero
+      if (images.length > 1) {
+        sendGAEvent("hero_image_rotate", {
+          index: (currentImageIndex + 1) % images.length,
+          total: images.length,
+          mode: "auto",
+        });
+      }
     }, 4000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t.hero?.images]);
 
   const openVideo = (videoId: string) => {
-    if (!videoId || videoId.trim() === '') return;
+    if (!videoId || videoId.trim() === "") return;
     setSelectedVideo(videoId);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
+
+    // 📊 Evento: abrir vídeo do YouTube
+    sendGAEvent("youtube_video_open", {
+      video_id: videoId,
+      origin_section: "youtube",
+    });
   };
 
   const closeVideo = () => {
+    // 📊 Evento: fechar modal de vídeo
+    if (selectedVideo) {
+      sendGAEvent("youtube_video_close", {
+        video_id: selectedVideo,
+      });
+    }
+
     setSelectedVideo(null);
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = "auto";
+  };
+
+  const handleHeroImageDotClick = (index: number) => {
+    setCurrentImageIndex(index);
+    // 📊 Evento: clique manual no dot do hero
+    sendGAEvent("hero_image_select", {
+      index,
+      total: t.hero?.images?.length || 0,
+      mode: "manual",
+    });
+  };
+
+  const handleResumeClick = (origin: "header" | "contact") => {
+    if (!resumeUrl) return;
+    // 📊 Evento: clique para abrir currículo
+    sendGAEvent("resume_click", {
+      origin,
+      locale,
+      resume_url: resumeUrl,
+    });
+  };
+
+  const handleLetsChatClick = () => {
+    // 📊 Evento: clique no CTA principal (Hero → LinkedIn)
+    sendGAEvent("cta_click", {
+      cta_id: "hero_lets_chat",
+      destination: "linkedin",
+      locale,
+    });
+  };
+
+  const handleSkillClick = (skill: Skill) => {
+    // 📊 Evento: clique em skill
+    sendGAEvent("skill_click", {
+      skill_id: skill.id,
+      href: skill.href,
+    });
+  };
+
+  const handleFeaturedProjectClick = (project: Project) => {
+    // 📊 Evento: clique em projeto destacado (GitHub)
+    sendGAEvent("project_click", {
+      project_id: project.id,
+      project_name: project.name,
+      slug: project.slug,
+      destination: "github",
+      url: project.githubUrl,
+      featured: project.featured,
+    });
+  };
+
+  const handleRealProjectClick = (project: any) => {
+    // 📊 Evento: clique em projeto real (seção Real Projects)
+    sendGAEvent("real_project_click", {
+      project_id: project.id,
+      title: project.title,
+      company: project.company,
+      link: project.link,
+    });
+  };
+
+  const handleYoutubeChannelClick = () => {
+    // 📊 Evento: clique no link do canal do YouTube
+    sendGAEvent("social_click", {
+      platform: "youtube",
+      location: "youtube_section_header",
+      href: "https://www.youtube.com/@atirson-dev",
+    });
+  };
+
+  const handleYoutubeCardClick = (video: any) => {
+    // o openVideo já manda um evento; esse complementa com metadados
+    sendGAEvent("youtube_card_click", {
+      video_id: video.id,
+      title: video.title,
+    });
+    openVideo(video.id);
+  };
+
+  const handleArticleClick = (article: any) => {
+    // 📊 Evento: clique em artigo publicado
+    sendGAEvent("article_click", {
+      platform: article.platform,
+      title: article.title,
+      link: article.link,
+    });
+  };
+
+  const handleWorkSetupItemView = (category: string, itemName: string) => {
+    // Evento leve, só se você quiser medir que a seção foi renderizada
+    sendGAEvent("work_setup_item_view", {
+      category,
+      item_name: itemName,
+    });
+  };
+
+  const handleContactSubmitStart = () => {
+    // Se quiser usar dentro do ContactForm, pode passar callback via props;
+    // aqui deixo só como sugestão de evento.
+    sendGAEvent("contact_form_open", {
+      locale,
+    });
+  };
+
+  const handleSocialClick = (platform: string, href: string, location: string) => {
+    // 📊 Evento: clique em ícone social do footer
+    sendGAEvent("social_click", {
+      platform,
+      href,
+      location,
+    });
   };
 
   return (
@@ -94,6 +228,7 @@ export default function HomeClient({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-black text-xl font-medium font-satoshi text-center hover:text-orange-600 transition-colors cursor-pointer"
+                onClick={() => handleResumeClick("header")}
               >
                 {t.resume}
               </a>
@@ -104,74 +239,77 @@ export default function HomeClient({
 
         {/* Hero Section */}
         <section className="flex flex-col lg:flex-row items-center lg:items-start gap-8 px-4 md:px-12 mt-8">
-  <div className="flex-1 flex flex-col gap-4 items-center lg:items-start text-center lg:text-left">
-    <div className="text-black text-2xl font-medium font-satoshi">
-      {t.hi}
-    </div>
-    <h2 className="flex flex-row items-baseline justify-center lg:justify-start space-x-2">
-      <span className="text-black text-4xl md:text-5xl font-bold font-satoshi">
-        {t.role1}
-      </span>
-      <span className="text-black text-4xl md:text-5xl font-bold font-satoshi">
-        {t.role2}
-      </span>
-    </h2>
-    <p className="text-black/90 text-base font-medium font-satoshi leading-8 max-w-md mx-auto lg:mx-0 whitespace-pre-line">
-      {aboutText}
-    </p>
-    <a
-      href="https://www.linkedin.com/in/atirson-fabiano/"
-      target="_blank"
-      rel="noopener noreferrer"
-      className={[
-        "w-full max-w-xs md:max-w-sm px-8 bg-black rounded-[10px] shadow-md flex items-center justify-center gap-2.5 mt-2 mx-auto lg:mx-0 hover:bg-orange-600 transition-colors",
-        "h-12",
-        locale === "pt" ? "h-18 md:h-12" : "",
-      ].join(" ")}
-    >
-      <span className="text-white text-xl font-medium font-satoshi">
-        {t.letsChat}
-      </span>
-    </a>
-  </div>
+          <div className="flex-1 flex flex-col gap-4 items-center lg:items-start text-center lg:text-left">
+            <div className="text-black text-2xl font-medium font-satoshi">
+              {t.hi}
+            </div>
+            <h2 className="flex flex-row items-baseline justify-center lg:justify-start space-x-2">
+              <span className="text-black text-4xl md:text-5xl font-bold font-satoshi">
+                {t.role1}
+              </span>
+              <span className="text-black text-4xl md:text-5xl font-bold font-satoshi">
+                {t.role2}
+              </span>
+            </h2>
+            <p className="text-black/90 text-base font-medium font-satoshi leading-8 max-w-md mx-auto lg:mx-0 whitespace-pre-line">
+              {aboutText}
+            </p>
+            <a
+              href="https://www.linkedin.com/in/atirson-fabiano/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={[
+                "w-full max-w-xs md:max-w-sm px-8 bg-black rounded-[10px] shadow-md flex items-center justify-center gap-2.5 mt-2 mx-auto lg:mx-0 hover:bg-orange-600 transition-colors",
+                "h-12",
+                locale === "pt" ? "h-18 md:h-12" : "",
+              ].join(" ")}
+              onClick={handleLetsChatClick}
+            >
+              <span className="text-white text-xl font-medium font-satoshi">
+                {t.letsChat}
+              </span>
+            </a>
+          </div>
 
-  {/* Carousel de Imagens */}
-<div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md mt-6 lg:mt-0">
-<div className="relative overflow-hidden rounded-[5px] shadow-lg w-64 h-80 md:w-80 md:h-96 lg:w-120 lg:h-140 mx-auto">
-    {t.hero?.images?.map((image: any, index: number) => (
-      <Image
-        key={index}
-        alt={image.alt}
-        src={image.src}
-        height={551}
-        width={327}
-        className={`w-full h-full object-cover transition-opacity duration-700 ${
-          index === currentImageIndex ? 'opacity-100' : 'opacity-0 absolute top-0 left-0'
-        }`}
-        loading={index === 0 ? 'eager' : 'lazy'}
-      />
-    ))}
-  </div>
+          {/* Carousel de Imagens */}
+          <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md mt-6 lg:mt-0">
+            <div className="relative overflow-hidden rounded-[5px] shadow-lg w-64 h-80 md:w-80 md:h-96 lg:w-120 lg:h-140 mx-auto">
+              {t.hero?.images?.map((image: any, index: number) => (
+                <Image
+                  key={index}
+                  alt={image.alt}
+                  src={image.src}
+                  height={551}
+                  width={327}
+                  className={`w-full h-full object-cover transition-opacity duration-700 ${
+                    index === currentImageIndex
+                      ? "opacity-100"
+                      : "opacity-0 absolute top-0 left-0"
+                  }`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+              ))}
+            </div>
 
-  {/* Indicadores (dots) */}
-  {t.hero?.images && t.hero.images.length > 1 && (
-    <div className="flex justify-center gap-2 mt-4">
-      {t.hero.images.map((_: any, index: number) => (
-        <button
-          key={index}
-          onClick={() => setCurrentImageIndex(index)}
-          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-            index === currentImageIndex
-              ? 'bg-orange-600 w-8'
-              : 'bg-black/20 hover:bg-black/40'
-          }`}
-          aria-label={`Ir para imagem ${index + 1}`}
-        />
-      ))}
-    </div>
-  )}
-</div>
-</section>
+            {/* Indicadores (dots) */}
+            {t.hero?.images && t.hero.images.length > 1 && (
+              <div className="flex justify-center gap-2 mt-4">
+                {t.hero.images.map((_: any, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => handleHeroImageDotClick(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      index === currentImageIndex
+                        ? "bg-orange-600 w-8"
+                        : "bg-black/20 hover:bg-black/40"
+                    }`}
+                    aria-label={`Ir para imagem ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Skills Section */}
         <section className="mt-16 px-4 md:px-12">
@@ -187,6 +325,7 @@ export default function HomeClient({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative w-20 h-20 md:w-24 md:h-24 bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center p-3 border border-orange-100 hover:border-orange-300 hover:scale-110"
+                onClick={() => handleSkillClick(skill)}
               >
                 <img
                   src={skill.src}
@@ -223,6 +362,7 @@ export default function HomeClient({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-orange-100 flex flex-col group"
+                  onClick={() => handleFeaturedProjectClick(project)}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-xl font-bold text-black font-satoshi group-hover:text-orange-600 transition-colors">
@@ -310,6 +450,7 @@ export default function HomeClient({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-orange-600 transition-colors font-medium whitespace-nowrap self-start"
+                    onClick={() => handleRealProjectClick(project)}
                   >
                     {t.realProjects.viewProject}
                     <span>→</span>
@@ -371,221 +512,256 @@ export default function HomeClient({
           </div>
         </section>
 
-{/* 🎯 NOVA SEÇÃO: Youtube */}
-<section className="mt-16 px-4 md:px-12">
-  <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-8 text-center md:text-left">
-    {t.sections.youtube}
-  </h2>
-  
-  <div className="bg-white rounded-lg shadow-lg p-8 border border-orange-100 mb-8">
-    <div className="flex items-center gap-4 mb-4">
-      <img
-        src="/youtube-black.svg"
-        alt="YouTube"
-        className="w-12 h-12"
-      />
-      <div>
-        <h3 className="text-xl font-bold text-black font-satoshi">
-          {t.youtube?.channelName || "@atirson-dev"}
-        </h3>
-        <a
-          href="https://www.youtube.com/@atirson-dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-orange-600 hover:underline"
-        >
-          {t.youtube?.visitChannel || (locale === "pt" ? "Visitar Canal" : "Visit Channel")}
-        </a>
-      </div>
-    </div>
-    <p className="text-black/70 text-base leading-relaxed">
-      {t.youtube?.channelDescription || (locale === "pt"
-        ? "Confira meus vídeos sobre desenvolvimento web, tutoriais e dicas de programação."
-        : "Check out my videos about web development, tutorials, and programming tips.")}
-    </p>
-  </div>
+        {/* 🎯 NOVA SEÇÃO: Youtube */}
+        <section className="mt-16 px-4 md:px-12">
+          <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-8 text-center md:text-left">
+            {t.sections.youtube}
+          </h2>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8 border border-orange-100 mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src="/youtube-black.svg"
+                alt="YouTube"
+                className="w-12 h-12"
+              />
+              <div>
+                <h3 className="text-xl font-bold text-black font-satoshi">
+                  {t.youtube?.channelName || "@atirson-dev"}
+                </h3>
+                <a
+                  href="https://www.youtube.com/@atirson-dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-600 hover:underline"
+                  onClick={handleYoutubeChannelClick}
+                >
+                  {t.youtube?.visitChannel ||
+                    (locale === "pt" ? "Visitar Canal" : "Visit Channel")}
+                </a>
+              </div>
+            </div>
+            <p className="text-black/70 text-base leading-relaxed">
+              {t.youtube?.channelDescription ||
+                (locale === "pt"
+                  ? "Confira meus vídeos sobre desenvolvimento web, tutoriais e dicas de programação."
+                  : "Check out my videos about web development, tutorials, and programming tips.")}
+            </p>
+          </div>
 
-  {/* Playlist de Vídeos */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-    {t.youtube?.videos?.map((video: any) => (
-      <div
-        key={video.id}
-        className="group bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-orange-100 cursor-pointer"
-        onClick={() => openVideo(video.id)}
-      >
-        {/* Thumbnail */}
-        <div className="relative aspect-video bg-black overflow-hidden">
-          <img
-            src={video.thumbnail || `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
-            alt={video.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-          />
-          {/* Play Button Overlay */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
-              <svg
-                className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
-                fill="currentColor"
-                viewBox="0 0 24 24"
+          {/* Playlist de Vídeos */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {t.youtube?.videos?.map((video: any) => (
+              <div
+                key={video.id}
+                className="group bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-orange-100 cursor-pointer"
+                onClick={() => handleYoutubeCardClick(video)}
               >
-                <path d="M8 5v14l11-7z" />
-              </svg>
+                {/* Thumbnail */}
+                <div className="relative aspect-video bg-black overflow-hidden">
+                  <img
+                    src={
+                      video.thumbnail ||
+                      `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`
+                    }
+                    alt={video.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
+                      <svg
+                        className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info do Vídeo */}
+                <div className="p-4">
+                  <h4 className="text-lg font-bold text-black font-satoshi mb-2 group-hover:text-orange-600 transition-colors line-clamp-2">
+                    {video.title}
+                  </h4>
+                  {video.description && (
+                    <p className="text-black/70 text-sm line-clamp-2">
+                      {video.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Modal de Vídeo */}
+        {selectedVideo && (
+          <div
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+            onClick={closeVideo}
+          >
+            <div
+              className="relative w-full max-w-5xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Botão Fechar */}
+              <button
+                onClick={closeVideo}
+                className="absolute -top-12 right-0 text-white hover:text-orange-400 transition-colors text-sm font-bold flex items-center gap-2"
+              >
+                <span>{t.youtube?.closeVideo || "Fechar"}</span>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              {/* Container do Vídeo */}
+              <div
+                className="relative w-full"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                {selectedVideo && (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Info do Vídeo */}
-        <div className="p-4">
-          <h4 className="text-lg font-bold text-black font-satoshi mb-2 group-hover:text-orange-600 transition-colors line-clamp-2">
-            {video.title}
-          </h4>
-          {video.description && (
-            <p className="text-black/70 text-sm line-clamp-2">
-              {video.description}
-            </p>
-          )}
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-
-{/* Modal de Vídeo */}
-{selectedVideo && (
-  <div
-    className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-    onClick={closeVideo}
-  >
-    <div
-      className="relative w-full max-w-5xl"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Botão Fechar */}
-      <button
-        onClick={closeVideo}
-        className="absolute -top-12 right-0 text-white hover:text-orange-400 transition-colors text-sm font-bold flex items-center gap-2"
-      >
-        <span>{t.youtube?.closeVideo || 'Fechar'}</span>
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      {/* Container do Vídeo */}
-      <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-        {selectedVideo && (
-          <iframe
-            src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
-            className="absolute top-0 left-0 w-full h-full rounded-lg"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
         )}
-      </div>
-    </div>
-  </div>
-)}
 
-       {/* 🎯 NOVA SEÇÃO: Artigos Publicados */}
-<section className="mt-16 px-4 md:px-12">
-  <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-8 text-center md:text-left">
-    {t.sections.publishedArticles}
-  </h2>
-  
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {t.articles?.list?.map((article: any, index: number) => (
-      <a
-        key={index}
-        href={article.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group bg-white rounded-lg shadow-lg p-6 border border-orange-100 hover:border-orange-400 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-      >
-        <div>
-          <div className="flex justify-between items-start mb-4">
-            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded ${
-              article.platform === 'LinkedIn' 
-                ? 'bg-blue-50 text-blue-600 border border-blue-100' 
-                : 'bg-gray-50 text-gray-600 border border-gray-100'
-            }`}>
-              {article.platform}
-            </span>
-            <svg 
-              className="w-5 h-5 text-black/20 group-hover:text-orange-600 transition-colors" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </div>
-          
-          <h3 className="text-lg font-bold text-black font-satoshi mb-3 group-hover:text-orange-600 transition-colors leading-tight">
-            {article.title}
-          </h3>
-          
-          <p className="text-black/70 text-sm mb-6 line-clamp-3">
-            {article.description}
-          </p>
-        </div>
+        {/* 🎯 NOVA SEÇÃO: Artigos Publicados */}
+        <section className="mt-16 px-4 md:px-12">
+          <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-8 text-center md:text-left">
+            {t.sections.publishedArticles}
+          </h2>
 
-        <span className="text-orange-600 text-sm font-bold flex items-center gap-2">
-          {t.articles.readMore}
-        </span>
-      </a>
-    ))}
-  </div>
-</section>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {t.articles?.list?.map((article: any, index: number) => (
+              <a
+                key={index}
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-white rounded-lg shadow-lg p-6 border border-orange-100 hover:border-orange-400 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                onClick={() => handleArticleClick(article)}
+              >
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded ${
+                        article.platform === "LinkedIn"
+                          ? "bg-blue-50 text-blue-600 border border-blue-100"
+                          : "bg-gray-50 text-gray-600 border border-gray-100"
+                      }`}
+                    >
+                      {article.platform}
+                    </span>
+                    <svg
+                      className="w-5 h-5 text-black/20 group-hover:text-orange-600 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </div>
 
-       {/* 🎯 NOVA SEÇÃO: Setup de Trabalho */}
-<section className="mt-16 px-4 md:px-12">
-  <div className="bg-white rounded-lg shadow-lg p-8 md:p-12 border border-orange-100">
-    <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-4 text-center md:text-left">
-      {t.sections.workSetup}
-    </h2>
-    
-    {t.workSetup?.subtitle && (
-      <p className="text-black/70 text-lg mb-10 text-center md:text-left">
-        {t.workSetup.subtitle}
-      </p>
-    )}
+                  <h3 className="text-lg font-bold text-black font-satoshi mb-3 group-hover:text-orange-600 transition-colors leading-tight">
+                    {article.title}
+                  </h3>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-      {Object.entries(
-        t.workSetup?.items?.reduce((acc: any, item: any) => {
-          if (!acc[item.category]) acc[item.category] = [];
-          acc[item.category].push(item);
-          return acc;
-        }, {}) || {}
-      ).map(([category, items]: [string, any]) => (
-        <div key={category} className="flex flex-col">
-          <h3 className="text-xl font-bold text-black font-satoshi mb-6 pb-2 border-b border-orange-100">
-            {t.workSetup.categories?.[category as keyof typeof t.workSetup.categories] ?? category}
-          </h3>
-          
-          <ul className="space-y-5">
-            {items.map((item: any, index: number) => (
-              <li key={index} className="flex items-start gap-4 group">
-                <span className="text-2xl bg-orange-50 w-12 h-12 flex items-center justify-center rounded-xl border border-orange-100 group-hover:scale-110 transition-transform duration-300">
-                  {item.emoji}
-                </span>
-                <div className="flex flex-col">
-                  <span className="font-bold text-black text-base leading-tight group-hover:text-orange-600 transition-colors">
-                    {item.name}
-                  </span>
-                  <span className="text-black/60 text-sm mt-1">
-                    {item.specs}
-                  </span>
+                  <p className="text-black/70 text-sm mb-6 line-clamp-3">
+                    {article.description}
+                  </p>
                 </div>
-              </li>
+
+                <span className="text-orange-600 text-sm font-bold flex items-center gap-2">
+                  {t.articles.readMore}
+                </span>
+              </a>
             ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
+          </div>
+        </section>
+
+        {/* 🎯 NOVA SEÇÃO: Setup de Trabalho */}
+        <section className="mt-16 px-4 md:px-12">
+          <div className="bg-white rounded-lg shadow-lg p-8 md:p-12 border border-orange-100">
+            <h2 className="text-black text-3xl md:text-4xl font-bold font-satoshi mb-4 text-center md:text-left">
+              {t.sections.workSetup}
+            </h2>
+
+            {t.workSetup?.subtitle && (
+              <p className="text-black/70 text-lg mb-10 text-center md:text-left">
+                {t.workSetup.subtitle}
+              </p>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+              {Object.entries(
+                t.workSetup?.items?.reduce((acc: any, item: any) => {
+                  if (!acc[item.category]) acc[item.category] = [];
+                  acc[item.category].push(item);
+                  return acc;
+                }, {}) || {}
+              ).map(([category, items]: [string, any]) => (
+                <div key={category} className="flex flex-col">
+                  <h3 className="text-xl font-bold text-black font-satoshi mb-6 pb-2 border-b border-orange-100">
+                    {t.workSetup.categories?.[
+                      category as keyof typeof t.workSetup.categories
+                    ] ?? category}
+                  </h3>
+
+                  <ul className="space-y-5">
+                    {items.map((item: any, index: number) => (
+                      <li
+                        key={index}
+                        className="flex items-start gap-4 group"
+                        onMouseEnter={() =>
+                          handleWorkSetupItemView(category, item.name)
+                        }
+                      >
+                        <span className="text-2xl bg-orange-50 w-12 h-12 flex items-center justify-center rounded-xl border border-orange-100 group-hover:scale-110 transition-transform duration-300">
+                          {item.emoji}
+                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-black text-base leading-tight group-hover:text-orange-600 transition-colors">
+                            {item.name}
+                          </span>
+                          <span className="text-black/60 text-sm mt-1">
+                            {item.specs}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Contact Section */}
         <section className="mt-20 px-4 md:px-12 flex flex-col items-center">
@@ -593,6 +769,7 @@ export default function HomeClient({
             {t.letsWork}
           </h3>
 
+          {/* Se quiser medir abertura/envio do formulário, pode passar callbacks aqui */}
           <ContactForm t={t} />
 
           {resumeUrl && (
@@ -601,6 +778,7 @@ export default function HomeClient({
               target="_blank"
               rel="noopener noreferrer"
               className="block mt-6 text-base font-medium font-satoshi leading-8 underline hover:text-orange-600 transition-colors"
+              onClick={() => handleResumeClick("contact")}
             >
               {t.downloadResume}
             </a>
@@ -638,6 +816,13 @@ export default function HomeClient({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-13 h-13 flex items-center justify-center rounded-full border-2 border-black hover:border-orange-400 transition-colors"
+                onClick={() =>
+                  handleSocialClick(
+                    icon.alt.toLowerCase(),
+                    icon.href,
+                    "footer"
+                  )
+                }
               >
                 <img
                   src={icon.src}
