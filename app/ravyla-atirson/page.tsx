@@ -627,7 +627,8 @@ export default function WeddingPage() {
               <h3 className="font-cormorant text-4xl mb-6 text-center" style={{ color: CONFIG.COLORS.primary }}>Madrinhas</h3>
               <p className="text-lg leading-relaxed mb-8 text-center" style={{ color: CONFIG.COLORS.textDark }}>
                 Nesse dia queremos que você fique ainda mais bonita do que já é, por isso escolhemos a cor 
-                <strong> azul royal</strong> e definimos uma paleta para você escolher seu tom preferido.
+                <strong> azul royal</strong> e definimos uma paleta para você escolher seu tom preferido. 
+                Como nossa cerimônia será ao ar livre na grama, recomendamos o uso de <strong>saltos blocados (quadrados)</strong> ou adaptadores de salto para que você aproveite cada momento com total conforto e segurança!
               </p>
               
               {/* Paleta de cores para madrinhas */}
