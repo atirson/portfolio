@@ -1,35 +1,28 @@
-// app/sitemap.ts
 import type { MetadataRoute } from "next";
-import { getSiteUrl } from "@/app/lib/site";
+
+const baseUrl = "https://atirson.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = getSiteUrl().replace(/\/+$/, "");
   const now = new Date();
 
   return [
     {
-      url: `${base}/en`,
+      url: `${baseUrl}/`,
       lastModified: now,
       changeFrequency: "weekly",
-      priority: 1.0,
-      alternates: {
-        languages: {
-          "en-US": `${base}/en`,
-          "pt-BR": `${base}/pt`,
-        },
-      },
+      priority: 1,
     },
     {
-      url: `${base}/pt`,
+      url: `${baseUrl}/pt`,
       lastModified: now,
       changeFrequency: "weekly",
-      priority: 1.0,
-      alternates: {
-        languages: {
-          "en-US": `${base}/en`,
-          "pt-BR": `${base}/pt`,
-        },
-      },
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/en`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
   ];
 }

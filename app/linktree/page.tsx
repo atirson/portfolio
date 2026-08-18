@@ -21,6 +21,7 @@ import {
   Check,
 } from "lucide-react";
 import { logLinkTreeClick } from "@/app/lib/gtag";
+import { useFeatureFlag, FeatureGate } from "feature-flow-js/react";
 
 // 🔗 Configuração central dos links (edite aqui)
 const LINKTREE_CONFIG = {
@@ -104,6 +105,10 @@ export default function LinktreePage() {
   // Hook global de analytics do seu projeto
   useAnalytics();
 
+  const isTopLinkHighlighted = useFeatureFlag('linktree-highlight-cta'); // local: off, remoto: on
+  const hasNewBadge = useFeatureFlag('linktree-new-badge'); // só remoto
+  const isHiddenBiosEnabled = useFeatureFlag('hidden-bio'); // só remoto
+
   const [analyticsState, setAnalyticsState] = useState<AnalyticsState>({});
 
   const trackLinkClick = useCallback(
@@ -136,7 +141,13 @@ export default function LinktreePage() {
 
   type LinkItem = (typeof LINKTREE_CONFIG.links)[number];
 
-  const LinkButton = ({ link }: { link: LinkItem }) => {
+  const LinkButton = ({
+    link,
+    highlighted = false,
+  }: {
+    link: LinkItem;
+    highlighted?: boolean;
+  }) => {
     const Icon = link.icon;
 
     const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
@@ -153,7 +164,11 @@ export default function LinktreePage() {
       <a
         href={link.url}
         onClick={handleClick}
-        className="group w-full max-w-2xl bg-white hover:bg-orange-50 border-2 border-black hover:border-orange-500 rounded-full px-6 py-4 transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center justify-between"
+        className={`group w-full max-w-2xl bg-white hover:bg-orange-50 border-2 rounded-full px-6 py-4 transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center justify-between ${
+          highlighted
+            ? "border-orange-500 ring-4 ring-orange-200"
+            : "border-black hover:border-orange-500"
+        }`}
       >
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-orange-700 border border-orange-200">
@@ -162,6 +177,11 @@ export default function LinktreePage() {
           <span className="text-black text-lg font-semibold font-satoshi group-hover:text-orange-600 transition-colors">
             {link.title}
           </span>
+          {highlighted && (
+            <span className="text-[10px] uppercase tracking-wide font-bold bg-orange-500 text-white px-2 py-0.5 rounded-full">
+              🌐 Remote
+            </span>
+          )}
         </div>
         <ArrowRight className="h-5 w-5 text-orange-600 group-hover:translate-x-1 transition-transform" />
       </a>
@@ -209,40 +229,63 @@ export default function LinktreePage() {
           </div>
 
           <div className="text-center">
-            <h1 className="text-black text-3xl font-bold font-satoshi mb-2">
+            <h1 className="text-black text-3xl font-bold font-satoshi mb-2 inline-flex items-center gap-2">
               {LINKTREE_CONFIG.profile.name}
+              {hasNewBadge && (
+                <span className="text-xs font-semibold bg-orange-500 text-white px-2 py-0.5 rounded-full align-middle">
+                  New
+                </span>
+              )}
             </h1>
-            <p className="text-black/70 text-base font-medium font-satoshi">
-              {LINKTREE_CONFIG.profile.bio}
-            </p>
+            {
+              isHiddenBiosEnabled && (
+                <p className="text-black/70 text-base font-medium font-satoshi">
+                  {LINKTREE_CONFIG.profile.bio}
+                </p>
+              )
+            }
+            
           </div>
         </div>
 
         {/* Links principais */}
         <div className="w-full flex flex-col items-center gap-4 mt-4">
-          {LINKTREE_CONFIG.links.map((link) => (
-            <LinkButton key={link.id} link={link} />
+          {LINKTREE_CONFIG.links.map((link, index) => (
+            <LinkButton
+              key={link.id}
+              link={link}
+              highlighted={index === 0 && isTopLinkHighlighted}
+            />
           ))}
         </div>
 
-        {/* Redes sociais */}
-        <div className="flex gap-4 mt-8">
-          {LINKTREE_CONFIG.socialIcons.map((social) => (
-            <SocialIconButton key={social.id} social={social} />
-          ))}
-        </div>
+        {/* Redes sociais — controladas pelo flag local "hidden-socials" */}
+        <FeatureGate
+          flag="hidden-socials"
+          fallback={
+            <div className="flex gap-4 mt-8">
+              {LINKTREE_CONFIG.socialIcons.map((social) => (
+                <SocialIconButton key={social.id} social={social} />
+              ))}
+            </div>
+          }
+        >
+          <p className="text-black/40 text-xs font-satoshi mt-8">
+            🔧 Social networks hidden by the "hidden-socials" local flag.
+          </p>
+        </FeatureGate>
 
         <footer className="mt-8 text-center">
           <p className="text-black/50 text-sm font-satoshi">
-            Então você é Dev ou um saco de batatas? 😉
+            If you want to use Feature Flow JS in your project, check the documentation below.
           </p>
           <a
-            href="https://www.linkedin.com/posts/atirson-fabiano_desenvolvimento-dados-linktree-activity-7421881666106867712-lu24?utm_source=share&utm_medium=member_desktop&rcm=ACoAACdiD2gB8vTAFjSemd8urO4QAC_tlP1llWc"
+            href="https://www.npmjs.com/package/feature-flow-js?activeTab=readme"
             target="_blank"
             rel="noopener noreferrer"
             className="text-black/50 text-sm font-medium font-satoshi hover:text-orange-600 transition-colors"
           >
-            Post LinkedIn Dev Batata
+            Docs Feature Flow JS
           </a>
         </footer>
       </div>

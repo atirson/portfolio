@@ -115,6 +115,7 @@ export async function generateMetadata({
       languages: {
         "pt-BR": "https://atirson.com/pt",
         "en-US": "https://atirson.com/en",
+        "x-default": "https://atirson.com",
       },
     },
   };
