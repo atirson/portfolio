@@ -238,7 +238,7 @@ export default function LinktreePage() {
               )}
             </h1>
             {
-              isHiddenBiosEnabled && (
+              !isHiddenBiosEnabled && (
                 <p className="text-black/70 text-base font-medium font-satoshi">
                   {LINKTREE_CONFIG.profile.bio}
                 </p>
