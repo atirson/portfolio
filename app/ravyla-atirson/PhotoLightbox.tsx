@@ -87,7 +87,7 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
       <img
         src={photoUrl(photos[index])}
         alt={`Foto do casamento ${index + 1}`}
-        className="relative z-10 max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl pointer-events-none"
+        className="relative max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl pointer-events-none"
       />
 
       <button
