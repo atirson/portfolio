@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import QRCode from "react-qr-code";
 import { sendGAEvent } from '@/app/lib/gtag'; // 👈 Importa a função de analytics
+import { FEATURED_PHOTOS, thumbUrl } from './gallery-data';
+import PhotoLightbox from './PhotoLightbox';
 
 // ============================================
 // 🎨 CONFIGURAÇÕES DO SITE (EDITE AQUI)
@@ -11,8 +14,15 @@ import { sendGAEvent } from '@/app/lib/gtag'; // 👈 Importa a função de anal
 const CONFIG = {
   // 🎵 Arquivos de Mídia
   MUSIC_PATH: '/casamento.mp3',
-  HERO_PHOTO: '/casa_fake.jpg',
-  
+
+  // 🖼️ Carousel do Banner (topo da página, rotação automática)
+  HERO_PHOTOS: [
+    '/hero-1.jpg',
+    '/hero-2.jpg',
+    '/hero-3.jpg',
+    '/hero-4.jpg',
+  ],
+
   // 🖼️ Carousel de Fotos do Casal (adicione quantas quiser)
   COUPLE_PHOTOS: [
     '/CAROUSEL_1.jpg',
@@ -42,17 +52,10 @@ const CONFIG = {
   WEDDING_DATE: '2026-05-16T16:00:00',
   WEDDING_DATE_DISPLAY: '16 DE MAIO DE 2026',
 
-  // 📍 Local do Evento
+  // 📍 Local do Evento (só o essencial - a página com endereço/mapa foi substituída pela galeria)
   VENUE: {
     name: 'Chácara do Italiano',
-    address: 'BR-414 - Jardim Promissão',
     city: 'Anápolis - GO',
-    cep: 'CEP 75073-815',
-    time: '16h00',
-    dresscode: 'Esporte Fino / Passeio Completo',
-    parking: 'Estacionamento gratuito no local',
-    mapsEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3830.7129614134537!2d-48.933898600000006!3d-16.2351898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ea71335202019%3A0xef1729b983104328!2sCh%C3%A1cara%20do%20italiano!5e0!3m2!1spt-BR!2sbr!4v1768486848196!5m2!1spt-BR!2sbr',
-    mapsLink: 'https://maps.app.goo.gl/oUUx8G2uGTDTs3Z16',
   },
 
   // 🎁 Presentes
@@ -61,6 +64,11 @@ const CONFIG = {
     pixKeyURL: 'https://nubank.com.br/cobrar/3xpyj/69762c55-6e51-4116-8653-61ff6ddf7851',
     pixKey: '62 99422-9811',
     giftListUrl: 'https://lista.havan.com.br/Convidado/ItensListaPresente/891945#/',
+  },
+
+  // 🎬 Vídeo do Casamento (YouTube não listado)
+  VIDEO: {
+    YOUTUBE_ID: 'J6165wplUdE',
   },
 
   // 📅 Programação do Dia (SEM pista de dança e SEM bebida alcoólica)
@@ -78,10 +86,13 @@ const CONFIG = {
 // ============================================
 
 export default function WeddingPage() {
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [timeMarried, setTimeMarried] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [heroPhotoIndex, setHeroPhotoIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [galleryLightboxIndex, setGalleryLightboxIndex] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const WEDDING_DATE = new Date(CONFIG.WEDDING_DATE).getTime();
@@ -141,23 +152,29 @@ export default function WeddingPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Auto-play do carousel de banners (hero)
   useEffect(() => {
-    const updateCountdown = () => {
-      const now = Date.now();
-      const distance = WEDDING_DATE - now;
+    const interval = setInterval(() => {
+      setHeroPhotoIndex((prev) => (prev + 1) % CONFIG.HERO_PHOTOS.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
 
-      if (distance > 0) {
-        setCountdown({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        });
-      }
+  // Tempo de casados (o casamento já aconteceu, então contamos para frente a partir da data)
+  useEffect(() => {
+    const updateTimeMarried = () => {
+      const elapsed = Date.now() - WEDDING_DATE;
+
+      setTimeMarried({
+        days: Math.floor(elapsed / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((elapsed % (1000 * 60)) / 1000)
+      });
     };
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    updateTimeMarried();
+    const interval = setInterval(updateTimeMarried, 1000);
     return () => clearInterval(interval);
   }, [WEDDING_DATE]);
 
@@ -255,11 +272,11 @@ export default function WeddingPage() {
     }
   };
 
-  // 📊 Função para rastrear clique no botão "Como Chegar"
-  const handleMapClick = () => {
-    sendGAEvent('map_directions_click', {
-      venue_name: CONFIG.VENUE.name,
-      venue_city: CONFIG.VENUE.city,
+  // 📊 Função para rastrear play do vídeo do casamento
+  const handlePlayVideo = () => {
+    setIsVideoPlaying(true);
+    sendGAEvent('wedding_video_play', {
+      video_id: CONFIG.VIDEO.YOUTUBE_ID,
     });
   };
 
@@ -404,7 +421,8 @@ export default function WeddingPage() {
           <ul className={`${isMenuOpen ? 'left-0' : '-left-full'} md:left-auto fixed md:relative md:top-0 flex flex-col md:flex-row list-none gap-6 md:gap-10 items-center md:bg-transparent w-full md:w-auto p-8 md:p-0 shadow-lg md:shadow-none transition-all duration-300`} style={{ backgroundColor: isMenuOpen ? CONFIG.COLORS.backgroundAlt : 'transparent', top: isMenuOpen ? '-10px' : '0', marginTop: isMenuOpen ? '50px' : '0' }}>
             <li><a href="#home" onClick={(e) => smoothScroll(e, '#home')} className="font-medium text-sm tracking-wide transition-all relative after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:transition-all hover:after:w-full" style={{ color: CONFIG.COLORS.primary, textDecoration: 'none' }}>Home</a></li>
             <li><a href="#historia" onClick={(e) => smoothScroll(e, '#historia')} className="font-medium text-sm tracking-wide transition-all relative after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:transition-all hover:after:w-full" style={{ color: CONFIG.COLORS.primary, textDecoration: 'none' }}>Nossa História</a></li>
-            <li><a href="#local" onClick={(e) => smoothScroll(e, '#local')} className="font-medium text-sm tracking-wide transition-all relative after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:transition-all hover:after:w-full" style={{ color: CONFIG.COLORS.primary, textDecoration: 'none' }}>Local</a></li>
+            <li><a href="#video" onClick={(e) => smoothScroll(e, '#video')} className="font-medium text-sm tracking-wide transition-all relative after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:transition-all hover:after:w-full" style={{ color: CONFIG.COLORS.primary, textDecoration: 'none' }}>Vídeo</a></li>
+            <li><a href="#galeria" onClick={(e) => smoothScroll(e, '#galeria')} className="font-medium text-sm tracking-wide transition-all relative after:absolute after:bottom-[-5px] after:left-0 after:w-0 after:h-0.5 after:transition-all hover:after:w-full" style={{ color: CONFIG.COLORS.primary, textDecoration: 'none' }}>Galeria</a></li>
             <li className="w-[70px] h-[70px]">
               <img src={CONFIG.LOGO} alt="Logo" className="w-full h-full object-contain" />
             </li>
@@ -417,15 +435,20 @@ export default function WeddingPage() {
 
       {/* HERO */}
       <section id="home" className="min-h-screen flex flex-col justify-center items-center text-center px-8 pt-32 pb-16 relative overflow-hidden">
-        {/* Imagem de fundo com overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ 
-            backgroundImage: `url(${CONFIG.HERO_PHOTO})`,
-            filter: 'brightness(0.7)'
-          }}
-        ></div>
-        
+        {/* Carousel de fotos de fundo (banner) */}
+        {CONFIG.HERO_PHOTOS.map((photo, index) => (
+          <div
+            key={photo}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out"
+            style={{
+              backgroundImage: `url(${photo})`,
+              backgroundPosition: 'center 20%',
+              filter: 'brightness(0.7)',
+              opacity: index === heroPhotoIndex ? 1 : 0
+            }}
+          ></div>
+        ))}
+
         {/* Overlay escuro para melhor legibilidade */}
         <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 53, 122, 0.25)' }}></div>
 
@@ -440,15 +463,16 @@ export default function WeddingPage() {
             <span className="text-4xl md:text-6xl mx-4" style={{ color: CONFIG.COLORS.secondary }}>&</span>
             {CONFIG.GROOM_NAME}
           </h1>
-          <p className="text-xl md:text-2xl my-6 font-normal tracking-[2px] text-shadow-strong" style={{ color: CONFIG.COLORS.textLight }}>{CONFIG.WEDDING_DATE_DISPLAY}</p>
-          <p className="text-lg md:text-xl italic mb-12 text-shadow-strong" style={{ color: CONFIG.COLORS.tertiary }}>{CONFIG.VENUE.name}, {CONFIG.VENUE.city}</p>
+          <p className="text-xl md:text-2xl my-6 font-normal tracking-[2px] text-shadow-strong" style={{ color: CONFIG.COLORS.textLight }}>Nos casamos em {CONFIG.WEDDING_DATE_DISPLAY}</p>
+          <p className="text-lg md:text-xl italic mb-4 text-shadow-strong" style={{ color: CONFIG.COLORS.tertiary }}>{CONFIG.VENUE.name}, {CONFIG.VENUE.city}</p>
+          <p className="text-sm md:text-base uppercase tracking-[3px] mb-12 text-shadow-strong" style={{ color: CONFIG.COLORS.secondary }}>💍 Já Somos Casados! 💍</p>
 
           <div className="flex gap-8 justify-center mt-12 flex-wrap">
             {[
-              { value: countdown.days, label: 'Dias' },
-              { value: countdown.hours, label: 'Horas' },
-              { value: countdown.minutes, label: 'Minutos' },
-              { value: countdown.seconds, label: 'Segundos' }
+              { value: timeMarried.days, label: 'Dias Casados' },
+              { value: timeMarried.hours, label: 'Horas' },
+              { value: timeMarried.minutes, label: 'Minutos' },
+              { value: timeMarried.seconds, label: 'Segundos' }
             ].map((item, idx) => (
               <div key={idx} className="bg-white/95 px-8 py-6 rounded-2xl shadow-2xl min-w-[100px] transition-all hover:-translate-y-2 hover:shadow-xl border-2 backdrop-blur-sm" style={{ borderColor: CONFIG.COLORS.secondary }}>
                 <span className="font-cormorant text-5xl font-bold block" style={{ color: CONFIG.COLORS.primary }}>{item.value}</span>
@@ -522,9 +546,9 @@ export default function WeddingPage() {
                 Cada dia ao seu lado é uma nova aventura, repleta de sorrisos, cumplicidade e muito amor.
               </p>
               <p className="text-lg leading-relaxed mb-8" style={{ color: CONFIG.COLORS.textDark }}>
-                Hoje, celebramos não apenas o nosso casamento, mas a união de duas almas que se encontraram 
-                e decidiram caminhar juntas para sempre. Queremos compartilhar este momento único com você, 
-                que faz parte da nossa história.
+                No dia {CONFIG.WEDDING_DATE_DISPLAY}, celebramos não apenas o nosso casamento, mas a união de
+                duas almas que se encontraram e decidiram caminhar juntas para sempre. Obrigado por ter feito
+                parte deste momento único com a gente.
               </p>
 
               <div className="p-8 rounded-2xl border-l-4 mt-8" style={{ background: `linear-gradient(135deg, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})`, borderColor: CONFIG.COLORS.secondary }}>
@@ -538,49 +562,106 @@ export default function WeddingPage() {
         </div>
       </section>
 
-      {/* LOCAL */}
-      <section id="local" className="fade-in opacity-0 translate-y-8 transition-all duration-700 py-24 px-8" style={{ background: `linear-gradient(to bottom, ${CONFIG.COLORS.background}, ${CONFIG.COLORS.tertiary})` }}>
+      {/* VÍDEO DO CASAMENTO */}
+      <section id="video" className="fade-in opacity-0 translate-y-8 transition-all duration-700 py-24 px-8" style={{ background: `linear-gradient(to bottom, ${CONFIG.COLORS.background}, ${CONFIG.COLORS.tertiary})` }}>
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="text-3xl mb-4" style={{ color: CONFIG.COLORS.secondary }}>✦ ❀ ✦</div>
+          <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Reviva Nosso Grande Dia</h2>
+          <p className="max-w-2xl mx-auto mb-12 text-lg" style={{ color: CONFIG.COLORS.textDark }}>
+            Preparamos um vídeo especial para você reviver com a gente os melhores momentos da nossa cerimônia.
+          </p>
+
+          <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl border-4" style={{ borderColor: CONFIG.COLORS.secondary }}>
+            {isVideoPlaying ? (
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${CONFIG.VIDEO.YOUTUBE_ID}?autoplay=1&rel=0`}
+                title={`Vídeo do casamento de ${CONFIG.BRIDE_NAME} e ${CONFIG.GROOM_NAME}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <button
+                onClick={handlePlayVideo}
+                className="absolute inset-0 w-full h-full group cursor-pointer"
+                aria-label="Assistir ao vídeo do casamento"
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${CONFIG.VIDEO.YOUTUBE_ID}/maxresdefault.jpg`}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = `https://img.youtube.com/vi/${CONFIG.VIDEO.YOUTUBE_ID}/hqdefault.jpg`;
+                  }}
+                  alt="Prévia do vídeo do casamento"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0" style={{ backgroundColor: 'rgba(0, 53, 122, 0.35)' }}></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div
+                    className="w-24 h-24 rounded-full flex items-center justify-center shadow-2xl transition-all group-hover:scale-110 animate-pulse-custom"
+                    style={{ background: `linear-gradient(135deg, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.secondary})` }}
+                  >
+                    <i className="fas fa-play text-white text-3xl ml-1"></i>
+                  </div>
+                </div>
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* GALERIA DE FOTOS */}
+      <section id="galeria" className="fade-in opacity-0 translate-y-8 transition-all duration-700 py-24 px-8" style={{ backgroundColor: CONFIG.COLORS.backgroundAlt }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="text-3xl mb-4" style={{ color: CONFIG.COLORS.secondary }}>✦ ❀ ✦</div>
-            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Local da Cerimônia</h2>
+            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Galeria de Fotos</h2>
+            <p className="max-w-2xl mx-auto mt-4 text-lg" style={{ color: CONFIG.COLORS.textDark }}>
+              Alguns dos nossos momentos favoritos do grande dia.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="rounded-3xl overflow-hidden shadow-2xl h-[435px]">
-              <iframe 
-                src={CONFIG.VENUE.mapsEmbed}
-                className="w-full h-full border-0"
-                allowFullScreen
-                loading="lazy"
-              />
-            </div>
+          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 md:gap-4 [column-fill:balance]">
+            {FEATURED_PHOTOS.map((num, i) => (
+              <button
+                key={num}
+                onClick={() => {
+                  setGalleryLightboxIndex(i);
+                  sendGAEvent('gallery_photo_open', { photo_number: num, source: 'home_preview' });
+                }}
+                className="block w-full mb-3 md:mb-4 break-inside-avoid rounded-2xl overflow-hidden shadow-lg cursor-zoom-in group"
+              >
+                <img
+                  src={thumbUrl(num)}
+                  loading="lazy"
+                  alt={`Foto do casamento ${i + 1}`}
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </button>
+            ))}
+          </div>
 
-            <div className="bg-white p-12 rounded-3xl shadow-xl">
-              <h3 className="font-cormorant text-4xl mb-6" style={{ color: CONFIG.COLORS.primary }}>{CONFIG.VENUE.name}</h3>
-              <p className="text-lg mb-4 leading-relaxed" style={{ color: CONFIG.COLORS.textDark }}>
-                <i className="fas fa-map-marker-alt mr-2" style={{ color: CONFIG.COLORS.secondary }}></i>
-                {CONFIG.VENUE.address}<br />
-                {CONFIG.VENUE.city}, {CONFIG.VENUE.cep}
-              </p>
-              <p className="text-lg mb-4" style={{ color: CONFIG.COLORS.textDark }}>
-                <i className="fas fa-clock mr-2" style={{ color: CONFIG.COLORS.secondary }}></i>
-                Cerimônia às {CONFIG.VENUE.time}
-              </p>
-              <p className="text-lg mb-4" style={{ color: CONFIG.COLORS.textDark }}>
-                <i className="fas fa-parking mr-2" style={{ color: CONFIG.COLORS.secondary }}></i>
-                {CONFIG.VENUE.parking}
-              </p>
-              <p className="text-lg mb-6" style={{ color: CONFIG.COLORS.textDark }}>
-                <i className="fas fa-info-circle mr-2" style={{ color: CONFIG.COLORS.secondary }}></i>
-                Traje: {CONFIG.VENUE.dresscode}
-              </p>
-              <a href={CONFIG.VENUE.mapsLink} target="_blank" rel="noopener noreferrer" onClick={handleMapClick} className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl" style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}>
-                <i className="fas fa-directions mr-2"></i> Como Chegar
-              </a>
-            </div>
+          <div className="text-center mt-12">
+            <Link
+              href="/ravyla-atirson/galeria"
+              onClick={() => sendGAEvent('gallery_view_all_click', {})}
+              className="inline-block px-10 py-4 text-white rounded-full font-semibold transition-all hover:-translate-y-1 hover:shadow-xl"
+              style={{ background: `linear-gradient(to right, ${CONFIG.COLORS.primary}, ${CONFIG.COLORS.accent})` }}
+            >
+              <i className="fas fa-images mr-2"></i> Ver Todas as Fotos
+            </Link>
           </div>
         </div>
+
+        {galleryLightboxIndex !== null && (
+          <PhotoLightbox
+            photos={FEATURED_PHOTOS}
+            index={galleryLightboxIndex}
+            onClose={() => setGalleryLightboxIndex(null)}
+            onNavigate={setGalleryLightboxIndex}
+            primaryColor={CONFIG.COLORS.primary}
+          />
+        )}
       </section>
 
       {/* PROGRAMAÇÃO */}
@@ -588,7 +669,7 @@ export default function WeddingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="text-3xl mb-4" style={{ color: CONFIG.COLORS.secondary }}>✦ ❀ ✦</div>
-            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Programação do Dia</h2>
+            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Como Foi o Nosso Grande Dia</h2>
           </div>
 
           <div className="max-w-3xl mx-auto relative">
@@ -607,14 +688,14 @@ export default function WeddingPage() {
         </div>
       </section>
 
-      {/* MANUAL DOS PADRINHOS */}
+      {/* AGRADECIMENTO AOS PADRINHOS E MADRINHAS */}
       <section id="manual" className="fade-in opacity-0 translate-y-8 transition-all duration-700 py-24 px-8" style={{ background: `linear-gradient(135deg, ${CONFIG.COLORS.tertiary}, ${CONFIG.COLORS.background})` }}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="text-3xl mb-4" style={{ color: CONFIG.COLORS.secondary }}>✦ ❀ ✦</div>
-            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Manual dos Padrinhos</h2>
+            <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Obrigado, Padrinhos e Madrinhas!</h2>
             <p className="max-w-2xl mx-auto mt-4 text-lg" style={{ color: CONFIG.COLORS.textDark }}>
-              Preparamos um guia especial para que todos fiquem lindos e harmonizados no nosso grande dia!
+              Vocês tornaram nosso grande dia ainda mais especial. Fica aqui o nosso carinho e gratidão.
             </p>
           </div>
 
@@ -625,18 +706,10 @@ export default function WeddingPage() {
                 <i className="fas fa-female"></i>
               </div>
               <h3 className="font-cormorant text-4xl mb-6 text-center" style={{ color: CONFIG.COLORS.primary }}>Madrinhas</h3>
-              <p className="text-lg leading-relaxed mb-8 text-center" style={{ color: CONFIG.COLORS.textDark }}>
-                Nesse dia queremos que você fique ainda mais bonita do que já é, por isso escolhemos a cor 
-                <strong> azul royal</strong> e definimos uma paleta para você escolher seu tom preferido. 
-                Como nossa cerimônia será ao ar livre na grama, recomendamos o uso de <strong>saltos blocados (quadrados)</strong> ou adaptadores de salto para que você aproveite cada momento com total conforto e segurança!
+              <p className="text-lg leading-relaxed text-center" style={{ color: CONFIG.COLORS.textDark }}>
+                Obrigado por estarem ao nosso lado, lindas de azul royal, cuidando de cada detalhe com tanto
+                carinho. A presença de vocês deixou nossa cerimônia ainda mais bonita e cheia de amor.
               </p>
-              
-              {/* Paleta de cores para madrinhas */}
-              <div className="flex justify-center gap-4 mt-6">
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#00357A' }} title="Azul Royal"></div>
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#1A4D8F' }} title="Azul Médio"></div>
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#2E5FA3' }} title="Azul Claro"></div>
-              </div>
             </div>
 
             {/* PADRINHOS */}
@@ -645,18 +718,10 @@ export default function WeddingPage() {
                 <i className="fas fa-male"></i>
               </div>
               <h3 className="font-cormorant text-4xl mb-6 text-center" style={{ color: CONFIG.COLORS.primary }}>Padrinhos</h3>
-              <p className="text-lg leading-relaxed mb-8 text-center" style={{ color: CONFIG.COLORS.textDark }}>
-                Para você nós pensamos em uma cor de gravata complementar ao vestido das madrinhas, por isso, use 
-                um <strong>terno bege</strong> com uma <strong>camisa branca</strong> e <strong>gravata azul royal</strong>. 
-                Definimos a paleta abaixo para o terno.
+              <p className="text-lg leading-relaxed text-center" style={{ color: CONFIG.COLORS.textDark }}>
+                Obrigado por caminharem ao nosso lado, elegantes de terno bege e gravata azul royal. Ter vocês
+                por perto nesse momento tão importante fez toda a diferença para nós.
               </p>
-              
-              {/* Paleta de cores para padrinhos */}
-              <div className="flex justify-center gap-4 mt-6">
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#E8DCC4' }} title="Bege Claro"></div>
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#D4C5A9' }} title="Bege Médio"></div>
-                <div className="w-16 h-16 rounded-full shadow-lg" style={{ backgroundColor: '#C5A572' }} title="Bege Escuro"></div>
-              </div>
             </div>
           </div>
         </div>
@@ -669,7 +734,7 @@ export default function WeddingPage() {
             <div className="text-3xl mb-4" style={{ color: CONFIG.COLORS.secondary }}>✦ ❀ ✦</div>
             <h2 className="font-cormorant text-6xl mb-4" style={{ color: CONFIG.COLORS.primary }}>Lista de Presentes</h2>
             <p className="max-w-2xl mx-auto mt-4" style={{ color: CONFIG.COLORS.textDark }}>
-              Sua presença é o nosso maior presente! Mas se desejar nos presentear, 
+              Já celebramos nosso grande dia, mas se ainda quiser nos presentear,
               ficaremos muito felizes em receber sua contribuição.
             </p>
           </div>
