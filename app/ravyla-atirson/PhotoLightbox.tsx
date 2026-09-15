@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { photoUrl } from './gallery-data';
 
 interface PhotoLightboxProps {
@@ -13,6 +14,11 @@ interface PhotoLightboxProps {
 
 export default function PhotoLightbox({ photos, index, onClose, onNavigate, primaryColor }: PhotoLightboxProps) {
   const touchStartX = useRef<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const goPrev = () => onNavigate((index - 1 + photos.length) % photos.length);
   const goNext = () => onNavigate((index + 1) % photos.length);
@@ -44,7 +50,9 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
     touchStartX.current = null;
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className="fixed inset-0 z-2000 flex items-center justify-center px-4"
       role="dialog"
@@ -87,7 +95,7 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
       <img
         src={photoUrl(photos[index])}
         alt={`Foto do casamento ${index + 1}`}
-        className="relative max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl pointer-events-none"
+        className="relative min-w-0 min-h-0 max-w-full max-h-[85dvh] object-contain rounded-lg shadow-2xl pointer-events-none"
       />
 
       <button
@@ -98,6 +106,7 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
       >
         <i className="fas fa-chevron-right text-white text-xl"></i>
       </button>
-    </div>
+    </div>,
+    document.body
   );
 }

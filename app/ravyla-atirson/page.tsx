@@ -203,8 +203,11 @@ export default function WeddingPage() {
     return () => observer.disconnect();
   }, []);
 
-  // Tentar autoplay ao carregar
+  // Tentar autoplay ao carregar (só na primeira visita - depois disso, respeita a
+  // escolha do usuário e não tenta tocar de novo sozinho ao voltar de outra página, como a galeria)
   useEffect(() => {
+    if (localStorage.getItem('isMusicPaused') !== null) return;
+
     const playAudio = async () => {
       if (audioRef.current) {
         try {
