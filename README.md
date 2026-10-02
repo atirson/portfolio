@@ -1,38 +1,59 @@
-# Personal Portfolio
+# Atirson Fabiano — Portfolio
 
-A clean, modern personal portfolio built with **Next.js**, **React**, **TypeScript**, **Tailwind CSS**, and internationalization support.
+Personal site of **Atirson Fabiano, Senior React Engineer** (React Web & React Native · TypeScript · Next.js · AI-First Development), live at **[www.atirson.com](https://www.atirson.com)**.
+
+One Next.js 16 (App Router) deployment serves three independent surfaces:
+
+| Route | What it is |
+|---|---|
+| `/en`, `/pt` | The professional portfolio, bilingual. `/` redirects to the visitor's language (`Accept-Language`). |
+| `/linktree` | A link-in-bio page with a feature-flag demo powered by [`feature-flow-js`](https://www.npmjs.com/package/feature-flow-js). |
+| `/ravyla-atirson` | A personal wedding page with a photo gallery (`/ravyla-atirson/galeria`). |
+
+---
+
+## 📸 Screenshots
+
+### Desktop
+
+![Hero: Senior React Engineer, tagline, about text and calls to action](.github/images/desktop.png)
+
+![Impact in numbers, companies and the experience section](.github/images/desktop-impact.png)
+
+![AI-First Engineering section and skills](.github/images/desktop-ai.png)
+
+### Mobile
+
+<p>
+  <img src=".github/images/mobile.png" alt="Mobile hero" width="300" />
+  &nbsp;
+  <img src=".github/images/mobile-experience.png" alt="Mobile experience section" width="300" />
+</p>
 
 ---
 
 ## ✨ Features
 
-- **Modern stack:** Next.js 16, React 19, TypeScript 5
-- **Styling:** Tailwind CSS 4
-- **Internationalization:** next-intl (App Router compatible)
-- **Data fetching:** graphql-request, GraphQL 16
-- **Linting & Formatting:** ESLint 9, Biome
-- **Production-ready:** Build & start scripts
+- **Portfolio sections:** hero, impact in numbers, companies, experience & case studies (challenge → what I did → impact → stack), AI-First engineering, skills, education & languages, open-source projects, YouTube & articles, and a contact form.
+- **Bilingual (en/pt):** all static copy lives in `locales/en.json` and `locales/pt.json`; a unit test keeps both files structurally identical.
+- **CMS content:** open-source projects, skill icons and résumé links come from [Hygraph](https://hygraph.com/) (GraphQL).
+- **SEO:** per-locale metadata with canonical and `hreflang` alternates, `Person` JSON-LD, `sitemap.xml`, `robots.txt`, and a generated Open Graph / Twitter image per locale built from the same locale copy.
+- **Contact form:** `POST /api/contact` validates input, rate-limits per IP and forwards the message as an [ntfy](https://ntfy.sh/) notification.
+- **Analytics:** Google Analytics 4 events for CTAs, navigation, projects, videos, articles and scroll depth.
+- **Accessibility:** semantic landmarks, a keyboard-operable mobile menu, labelled form fields and a video modal that closes with <kbd>Esc</kbd>.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Core         | Styling         | i18n           | Data Layer      | Dev Tooling         |
-|--------------|----------------|----------------|-----------------|---------------------|
-| ![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-20232a?logo=react&logoColor=61dafb) ![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=white) | ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38bdf8?logo=tailwindcss&logoColor=white) | ![next-intl](https://img.shields.io/badge/next--intl-ffda79?logo=vercel&logoColor=black) | ![GraphQL](https://img.shields.io/badge/GraphQL-e535ab?logo=graphql&logoColor=white) ![graphql-request](https://img.shields.io/badge/graphql--request-ff69b4?logo=graphql&logoColor=white) | ![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome) |
-
----
-
-
-## 📸 Screenshots
-
-### Desktop Preview
-
-![Desktop preview](.github/images/desktop.png)
-
-### Mobile Preview
-
-<img src=".github/images/mobile.png" alt="Mobile preview" width="375"  />
+| Area | Tools |
+|---|---|
+| Framework | ![Next.js](https://img.shields.io/badge/Next.js_16-000?logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React_19-20232a?logo=react&logoColor=61dafb) ![TypeScript](https://img.shields.io/badge/TypeScript_5-3178c6?logo=typescript&logoColor=white) |
+| Styling | ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-38bdf8?logo=tailwindcss&logoColor=white) |
+| Data | ![GraphQL](https://img.shields.io/badge/GraphQL-e535ab?logo=graphql&logoColor=white) ![Hygraph](https://img.shields.io/badge/Hygraph-000?logo=hygraph&logoColor=white) via `graphql-request` |
+| Feature flags | `feature-flow-js` (linktree) |
+| Analytics | ![Google Analytics](https://img.shields.io/badge/GA4-e37400?logo=googleanalytics&logoColor=white) |
+| Quality | ![ESLint](https://img.shields.io/badge/ESLint_9-4b32c3?logo=eslint&logoColor=white) ![Biome](https://img.shields.io/badge/Biome-60a5fa?logo=biome&logoColor=white) Node's built-in test runner |
 
 ---
 
@@ -40,39 +61,27 @@ A clean, modern personal portfolio built with **Next.js**, **React**, **TypeScri
 
 ### Prerequisites
 
-- Node.js (LTS recommended)
-- pnpm, yarn, or npm
+- **Node.js 22.6+** (the test script uses Node's TypeScript type stripping)
+- npm
 
-### Install
+### Environment variables
+
+Copy `.env.example` to `.env` and fill it in:
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_HYGRAPH_ENDPOINT` | Yes | Hygraph GraphQL endpoint. The portfolio throws at request time without it. |
+| `NEXT_HYGRAPH_TOKEN` | No | Hygraph auth token, if the content API is not public. |
+| `NEXT_PUBLIC_ENVIRONMENT` | No | Environment name used by the linktree's local feature flags. |
+
+### Run
 
 ```bash
-# with pnpm
-pnpm install
-
-# or with yarn
-yarn
-
-# or with npm
 npm install
+npm run dev        # http://localhost:3000
 ```
 
-### Development
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
-### Build and Start (Production)
+### Production build
 
 ```bash
 npm run build
@@ -81,89 +90,73 @@ npm run start
 
 ---
 
-## 📦 Available Scripts
+## 📦 Scripts
 
-| Script   | Description         |
-|----------|---------------------|
-| dev      | next dev            |
-| build    | next build          |
-| start    | next start          |
-| lint     | eslint              |
+| Script | Command | Description |
+|---|---|---|
+| `dev` | `next dev` | Development server |
+| `build` | `next build` | Production build |
+| `start` | `next start` | Serve the production build |
+| `lint` | `eslint` | ESLint (Next.js core-web-vitals + TypeScript rules) |
+| `test` | `node --experimental-strip-types --test …` | Unit tests for helpers and en/pt locale parity |
 
----
-
-## 🗂️ Project Structure (Simplified) App Folder
-
-````shell
-.
-├── [locale]
-│   ├── homeClient.tsx
-│   ├── layout.tsx
-│   └── page.tsx
-├── api
-│   └── contact
-│       └── route.ts
-├── components
-│   ├── ContactForm.tsx
-│   └── LanguageSwitch.tsx
-├── favicon.ico
-├── global.d.ts
-├── globals.css
-├── hooks
-│   └── useAnalytics.ts
-├── lib
-│   ├── gtag.ts
-│   └── hygraph.ts
-├── og-image.png
-├── page.tsx
-└── services
-    └── usePortfolioDetails.ts
-````
+Formatting and extra lint rules run through Biome: `npx biome check .`
 
 ---
 
-## 🌐 Internationalization
+## 🗂️ Project Structure
 
-- Configure locales and `defaultLocale` via [next-intl](https://next-intl-docs.vercel.app/docs/getting-started/app-router).
-- Store translation JSON per locale in `/messages`.
-- Use translation hooks in components/pages.
+```shell
+app/
+├── [locale]/                 # Portfolio (en/pt)
+│   ├── layout.tsx            # Metadata, canonical/hreflang, GA4
+│   ├── page.tsx              # Data fetching + Person JSON-LD
+│   ├── homeClient.tsx        # Page sections (client component)
+│   ├── opengraph-image.tsx   # Generated social preview per locale
+│   └── twitter-image.tsx
+├── api/
+│   ├── contact/route.ts      # Contact form → ntfy
+│   └── feature-flags/route.ts# "Remote" flags for the linktree
+├── components/               # ContactForm, LanguageSwitch
+├── hooks/useAnalytics.ts
+├── lib/
+│   ├── experience.ts         # Years of experience
+│   ├── locale.ts             # Accept-Language → locale
+│   ├── site.ts               # Site URL and social links
+│   ├── gtag.ts               # GA4 helpers
+│   ├── hygraph.ts            # GraphQL client
+│   ├── flag.config.ts        # Local feature flags
+│   └── remote-flags.ts
+├── services/usePortfolioDetails.ts  # Hygraph queries
+├── linktree/                 # Link-in-bio page
+├── ravyla-atirson/           # Wedding page + gallery
+├── page.tsx                  # Locale redirect
+├── sitemap.ts
+└── robots.ts
+locales/
+├── en.json
+└── pt.json
+```
 
 ---
 
-## 🔗 GraphQL Usage
+## 🤖 Built with AI agents
 
-- Use [graphql-request](https://github.com/jasonkuhrt/graphql-request) for simple, typed queries.
-- Create a client, define queries, and fetch data in server or client components.
+This repository is maintained with [Claude Code](https://claude.com/claude-code). The `.claude/` folder holds the project's agents and skills:
 
----
+- **Agents:** `portfolio-architect`, `portfolio-developer`, `portfolio-reviewer`, `portfolio-content`, `portfolio-seo`, `portfolio-release`.
+- **Skills:** `validate-portfolio`, `verify-links`, `verify-documentation`, `audit-accessibility`, `audit-performance`, `audit-seo`, `generate-project-case-study`, `generate-changelog`, `release-checklist`.
 
-## 🎨 Styling
-
-- [Tailwind CSS 4](https://tailwindcss.com/) utility-first classes.
-- Responsive design with a mobile-first approach.
-
----
-
-## 🧹 Code Quality
-
-- ESLint with Next.js config.
-- Optional: [Biome](https://biomejs.dev/) for fast formatting/linting.
+`CLAUDE.md` describes the architecture, rules and the recommended workflow between them.
 
 ---
 
 ## ☁️ Deployment
 
-- Build: `npm run build`
-- Start: `npm run start` on your host of choice (Vercel, Netlify, etc.)
+Deployed on Vercel from `npm run build`. There is no CI pipeline: run `npm run lint`, `npx tsc --noEmit`, `npm test` and `npm run build` before shipping (the `release-checklist` skill covers this).
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE)
-
----
-
-## 👤 Author
-
-**Atirson Fabiano** — Personal portfolio
+[MIT](LICENSE) © Atirson Fabiano

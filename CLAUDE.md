@@ -8,11 +8,11 @@ Atirson Fabiano's personal site: a Next.js 16 (App Router) app that bundles **th
 2. `app/linktree/*` — a link-in-bio microsite with its own layout, GA bootstrap, and a `feature-flow-js` feature-flag integration: local flags in `app/lib/flag.config.ts`, "remote" flags served by `app/api/feature-flags/route.ts` (backed by `app/lib/remote-flags.ts`) — a real Next.js Route Handler that deploys with the rest of the app on Vercel, not a separate process.
 3. `app/ravyla-atirson/*` — a personal wedding-invitation page. Real app code, deserving engineering scrutiny, but **not** professional-portfolio content.
 
-Stack: Next.js 16, React 19, TypeScript 5 (strict), Tailwind CSS 4, GraphQL via `graphql-request`, GA4 analytics, Biome + ESLint 9. **No test suite. No CI/CD pipeline** (`.github/` only holds README screenshots).
+Stack: Next.js 16, React 19, TypeScript 5 (strict), Tailwind CSS 4, GraphQL via `graphql-request`, GA4 analytics, Biome + ESLint 9. **Minimal unit tests** (`npm test`, Node's built-in runner: `app/**/*.test.ts`, `locales/*.test.ts`). **No CI/CD pipeline** (`.github/` only holds README screenshots).
 
 ## Architecture
 
-- Routing: App Router, `app/[locale]` uses `generateStaticParams` for `en`/`pt`; root `app/page.tsx` redirects to `/pt`.
+- Routing: App Router, `app/[locale]` uses `generateStaticParams` for `en`/`pt`; root `app/page.tsx` redirects to `/en` or `/pt` based on `Accept-Language` (`app/lib/locale.ts`).
 - Data: local JSON for static copy, Hygraph GraphQL for projects/skills/resume. `app/lib/hygraph.ts` throws at request time if `NEXT_PUBLIC_HYGRAPH_ENDPOINT` is unset.
 - SEO: per-locale `generateMetadata` in `app/[locale]/layout.tsx`, `Person` JSON-LD in `app/[locale]/page.tsx`, `app/sitemap.ts`, `app/robots.ts`, base URL nominally centralized in `app/lib/site.ts` (verify it's actually consistent — see `portfolio-seo`).
 - Analytics: GA4 (`app/lib/gtag.ts`, `app/hooks/useAnalytics.ts`), bootstrapped independently per layout (portfolio and linktree each load their own GA script).
@@ -74,7 +74,7 @@ Not every change needs the full chain — a copy fix only needs `portfolio-conte
 
 ## Validation
 
-Run `validate-portfolio` (lint + `tsc --noEmit` + build + asset/env checks) before considering any change complete. There is no test suite in this repo — don't claim tests passed.
+Run `validate-portfolio` (lint + `tsc --noEmit` + build + asset/env checks) before considering any change complete. Also run `npm test` (Node's built-in test runner; covers helpers and en/pt locale parity) — it is not a full test suite, so don't claim UI behavior is tested.
 
 ## Git Rules
 
