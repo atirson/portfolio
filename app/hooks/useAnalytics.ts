@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { logScrollDepth, logTimeOnPage, logClick } from "@/app/lib/gtag";
+import { logClick, logScrollDepth, logTimeOnPage } from "@/app/lib/gtag";
 
 export function useAnalytics() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = Math.round((scrollTop / docHeight) * 100);
 
       if (scrollPercent % 25 === 0 && scrollPercent > 0) {

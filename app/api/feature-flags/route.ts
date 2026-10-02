@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { getRemoteFeatureFlags } from '@/app/lib/remote-flags';
+import { NextResponse } from "next/server";
+import { getRemoteFeatureFlags } from "@/app/lib/remote-flags";
 
 // Replaces the old standalone server.js process. As a Next.js Route Handler
 // this ships and runs as part of the same app on Vercel, instead of a
@@ -8,6 +8,6 @@ export async function GET() {
   const data = await getRemoteFeatureFlags();
 
   return NextResponse.json(data, {
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    headers: { "Access-Control-Allow-Origin": "*" },
   });
 }
