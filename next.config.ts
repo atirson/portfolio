@@ -1,7 +1,10 @@
-/** @type {import('next').NextConfig} */
+import type { NextConfig } from "next";
 
-const nextConfig = {
-  transpilePackages: ['feature-flow-js'],
-}
+const nextConfig: NextConfig = {
+  transpilePackages: ["feature-flow-js"],
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "img.youtube.com" }],
+  },
+};
 
-module.exports = nextConfig
+export default nextConfig;

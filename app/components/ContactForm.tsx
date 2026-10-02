@@ -1,7 +1,18 @@
-'use client';
+"use client";
 import { useState } from "react";
 
-export function ContactForm({ t }: { t: any }) {
+type ContactFormLabels = Record<
+  | "name"
+  | "message"
+  | "placeholderMessage"
+  | "sendMessage"
+  | "sendingMessage"
+  | "sentMessage"
+  | "errorSendingMessage",
+  string
+>;
+
+export function ContactForm({ t }: { t: ContactFormLabels }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -33,8 +44,12 @@ export function ContactForm({ t }: { t: any }) {
       setName("");
       setEmail("");
       setMessage("");
-    } catch (err: any) {
-      setFeedback(err.message || t.errorSendingMessage);
+    } catch (err) {
+      setFeedback(
+        err instanceof Error && err.message
+          ? err.message
+          : t.errorSendingMessage,
+      );
     } finally {
       setIsSending(false);
     }
@@ -45,11 +60,15 @@ export function ContactForm({ t }: { t: any }) {
       onSubmit={handleSubmit}
       className="flex flex-col gap-6 w-full max-w-xl"
     >
-      <label className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8">
+      <label
+        htmlFor="contact-name"
+        className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8"
+      >
         {t.name}
       </label>
       <div className="relative">
         <input
+          id="contact-name"
           type="text"
           value={name}
           maxLength={NAME_LIMIT}
@@ -62,11 +81,15 @@ export function ContactForm({ t }: { t: any }) {
         </span>
       </div>
 
-      <label className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8">
+      <label
+        htmlFor="contact-email"
+        className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8"
+      >
         Email
       </label>
       <div className="relative">
         <input
+          id="contact-email"
           type="email"
           value={email}
           maxLength={EMAIL_LIMIT}
@@ -79,11 +102,15 @@ export function ContactForm({ t }: { t: any }) {
         </span>
       </div>
 
-      <label className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8">
+      <label
+        htmlFor="contact-message"
+        className="text-black text-xl md:text-2xl font-medium font-satoshi leading-8"
+      >
         {t.message}
       </label>
       <div className="relative">
         <textarea
+          id="contact-message"
           value={message}
           maxLength={MESSAGE_LIMIT}
           onChange={(e) => setMessage(e.target.value)}
@@ -100,7 +127,9 @@ export function ContactForm({ t }: { t: any }) {
         type="submit"
         disabled={isSending}
         className={`w-full max-w-xs md:max-w-sm px-8 py-3 rounded-[5px] flex items-center justify-center gap-2.5 mx-auto transition-all duration-200 ${
-          isSending ? "bg-gray-500 cursor-not-allowed" : "bg-black hover:bg-orange-700"
+          isSending
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-black hover:bg-orange-700"
         }`}
       >
         <span className="text-white text-base font-medium font-satoshi leading-8">
