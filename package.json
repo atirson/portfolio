@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --test \"app/**/*.test.ts\" \"locales/*.test.ts\""
   },
   "dependencies": {
     "feature-flow-js": "^1.0.0",

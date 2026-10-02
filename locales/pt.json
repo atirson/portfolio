@@ -1,110 +1,344 @@
 {
   "resume": "Currículo",
   "hi": "Oi, eu sou Atirson Fabiano",
-  "role1": "Software",
-  "role2": "Developer",
-  "about": "Sou um desenvolvedor Front-end com mais de {years} anos de experiência, especializado em construir aplicações escaláveis e de alta performance usando React (NextJS), React Native e TypeScript.\n\nTenho ampla experiência em arquiteturas modernas de front-end, design systems, micro-frontends e otimização de performance. Sou apaixonado por criar experiências de usuário perfeitas, resolver problemas complexos e entregar software de alta qualidade.",
-  "letsChat": "💬 Vamos conversar no LinkedIn",
-  "mySkills": "Minhas Habilidades",
-  "featuredProjects": "Projetos em destaque",
+  "role1": "Senior React",
+  "role2": "Engineer",
+  "tagline": "React Web & React Native · TypeScript · Next.js · Desenvolvimento AI-First",
+  "about": "Engenheiro de Software Sênior com {years}+ anos de experiência construindo aplicações React Web e React Native em produção, para produtos de alto tráfego que atendem milhões de usuários.\n\nAssumo decisões de arquitetura de ponta a ponta — de micro-frontends e design systems a performance, cache e estratégia de testes — e uso Claude, Gemini e agentes de IA diariamente para entregar mais rápido sem abrir mão da qualidade.",
+  "availability": "Remoto a partir do Brasil (LATAM) · Experiência com clientes dos EUA e da Europa · Inglês: proficiência profissional plena",
+  "ctaPrimary": "Vamos trabalhar juntos",
+  "letsChat": "Conectar no LinkedIn",
+  "nav": {
+    "menu": "Menu",
+    "impact": "Impacto",
+    "experience": "Experiência",
+    "ai": "AI-First",
+    "skills": "Skills",
+    "content": "Conteúdo",
+    "contact": "Contato"
+  },
+  "impact": {
+    "title": "Impacto em números",
+    "items": [
+      {
+        "value": "1M+",
+        "label": "visitas por mês em uma plataforma de vendas de telecom que liderei do zero até produção"
+      },
+      {
+        "value": "6M",
+        "label": "consultoras ativas atendidas com 100K+ requisições por minuto"
+      },
+      {
+        "value": "−99%",
+        "label": "de requisições após refatoração de cache do CMS (3,29M → 34K por mês)"
+      },
+      {
+        "value": "17% → 90%",
+        "label": "de cobertura de testes automatizados em uma plataforma de onboarding financeiro dos EUA"
+      }
+    ]
+  },
+  "trustedBy": {
+    "title": "Empresas e produtos em que trabalhei",
+    "names": [
+      "GFT Technologies",
+      "Zup Innovation",
+      "Vivo",
+      "CI&T",
+      "Natura",
+      "Avon",
+      "AB InBev",
+      "Driveway (USA)",
+      "Pottencial Seguradora"
+    ]
+  },
+  "sections": {
+    "realProjects": "Experiência e cases",
+    "youtube": "YouTube",
+    "publishedArticles": "Artigos Publicados"
+  },
+  "realProjects": {
+    "subtitle": "Produtos de alto impacto que construí para empresas e clientes — o desafio, o que fiz e o resultado",
+    "viewProject": "Ver Projeto",
+    "challenge": "Desafio",
+    "highlights": "O que fiz",
+    "results": "Impacto",
+    "techStack": "Tecnologias",
+    "projects": [
+      {
+        "id": "us-financial-onboarding",
+        "title": "Plataforma de Onboarding de Clientes",
+        "company": "GFT Technologies · Instituição financeira dos EUA (confidencial)",
+        "role": "Senior Software Engineer",
+        "period": "Mar 2026 – Atual",
+        "challenge": "Uma instituição financeira dos EUA precisava de uma plataforma de onboarding bilíngue e mobile-first para apoiar a aquisição de novos clientes, em um ambiente confidencial de serviços financeiros.",
+        "highlights": [
+          "Lidero o desenvolvimento front-end da plataforma com Next.js e TypeScript",
+          "Construo integrações financeiras e fluxos automatizados entre n8n, MuleSoft e Q2, tomando decisões independentes de arquitetura e integração",
+          "Refatorei integrações com Headless CMS e implementei estratégias de cache, reduzindo custos de infraestrutura e melhorando a escalabilidade",
+          "Elevei a cobertura de testes automatizados para o mínimo obrigatório de 90%, eliminando code smells do SonarQube",
+          "Melhorei a confiabilidade de CI/CD e dos fluxos de deploy com GitHub Actions e ArgoCD"
+        ],
+        "results": "Requisições reduzidas de 3,29M para 34K por mês e cobertura de testes de 17% para 90%",
+        "techStack": [
+          "Next.js",
+          "ReactJS",
+          "TypeScript",
+          "Jest",
+          "GraphQL",
+          "DatoCMS",
+          "n8n",
+          "MuleSoft",
+          "Q2",
+          "GitHub Actions",
+          "ArgoCD",
+          "TailwindCSS"
+        ]
+      },
+      {
+        "id": "vivo-fibra",
+        "title": "Vivo Fibra Lite",
+        "company": "Zup Innovation · Vivo",
+        "role": "Senior Software Engineer",
+        "period": "Mai 2025 – Mar 2026",
+        "link": "https://vivo.com.br/para-voce/produtos-e-servicos/planos-lite#/fibra",
+        "challenge": "Lançar do zero até produção uma nova plataforma de vendas de internet por fibra óptica com cobrança no cartão de crédito.",
+        "highlights": [
+          "Assumi todas as decisões de arquitetura front-end de ponta a ponta",
+          "Defini boas práticas de qualidade de código, testes e performance; revisei PRs e garanti padrões HOC/Composition e de código",
+          "Implementei testes unitários e de mutação com Jest e Stryker Mutator",
+          "Gerenciei busca e cache de dados com React Query para uma UX rápida e resiliente",
+          "Construí e mantive pipelines de CI/CD com ArgoCD no Kubernetes, com Grafana para monitoramento e observabilidade",
+          "Integrei o Stackspot AI criando agentes customizados, fontes de conhecimento e comandos rápidos com integração ao VSCode"
+        ],
+        "results": "1.000.000+ visitas por mês e mais de R$100 mil em receita mensal",
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "React Query",
+          "Zustand",
+          "Redux",
+          "Jest",
+          "Stryker Mutator",
+          "Kubernetes",
+          "ArgoCD",
+          "Grafana",
+          "GitHub Actions",
+          "Stackspot AI"
+        ]
+      },
+      {
+        "id": "natura-avon",
+        "title": "Vitrine",
+        "company": "CI&T · Natura e Avon",
+        "role": "Software Engineer",
+        "period": "Mai 2022 – Abr 2025",
+        "link": "https://ciandt.com/br/pt-br/case-study/unificacao-e-inovacao-no-atendimento-consultoras-natura",
+        "challenge": "Natura e Avon precisavam de uma plataforma para consultoras capaz de suportar tráfego muito alto de milhões de consultoras ativas.",
+        "highlights": [
+          "Liderei o desenvolvimento do Vitrine, a plataforma de alto tráfego para consultoras",
+          "Otimizei performance, qualidade e confiabilidade sob carga elevada",
+          "Colaborei com times multidisciplinares para entregar uma solução de alto impacto"
+        ],
+        "results": "Escalado para 100K+ requisições por minuto para 6 milhões de consultoras ativas",
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "Micro-frontends",
+          "Storybook",
+          "Jest",
+          "Cypress"
+        ]
+      },
+      {
+        "id": "ab-inbev",
+        "title": "E-commerce Multi-país",
+        "company": "CI&T · AB InBev",
+        "role": "Software Engineer",
+        "period": "Mai 2022 – Abr 2025",
+        "challenge": "Expandir uma plataforma de e-commerce para novos mercados com localização específica por país.",
+        "highlights": [
+          "Expandi e localizei a plataforma para Reino Unido, Alemanha, Bélgica, Holanda e Bolívia",
+          "Implementei testes unitários e orientados a comportamento para manter os releases seguros em todos os mercados"
+        ],
+        "results": "Lançado em 5 países, aumentando vendas e rentabilidade",
+        "techStack": ["ReactJS", "TypeScript", "Jest", "Cypress", "Jenkins"]
+      },
+      {
+        "id": "driveway",
+        "title": "Driveway",
+        "company": "CI&T · Driveway (USA)",
+        "role": "Software Engineer",
+        "period": "Mai 2022 – Abr 2025",
+        "link": "https://www.driveway.com/",
+        "challenge": "Melhorar a experiência de venda online de veículos em uma plataforma dos EUA.",
+        "highlights": [
+          "Construí componentes reutilizáveis e de alta qualidade para o Design System usado em toda a experiência de vendas",
+          "Investiguei e resolvi bugs críticos, garantindo a estabilidade do produto",
+          "Gerenciei ciclos de release e contribuí com fluxos de deploy contínuo",
+          "Implementei testes unitários e comportamentais com Jest e Playwright"
+        ],
+        "techStack": [
+          "ReactJS",
+          "TypeScript",
+          "Design System",
+          "Storybook",
+          "Jest",
+          "Playwright"
+        ]
+      },
+      {
+        "id": "pottencial",
+        "title": "Gestão de Corretores e Faturamento",
+        "company": "Squadra Tecnologia · Pottencial Seguradora",
+        "role": "Full-Stack Developer",
+        "period": "Mar 2020 – Abr 2022",
+        "challenge": "Uma seguradora precisava de um sistema de gestão de corretores para cotações, apólices e emissão de contratos, além de fluxos de faturamento e financeiros.",
+        "highlights": [
+          "Construí a arquitetura e as funcionalidades do sistema de gestão de corretores com ReactJS, Redux e Context API",
+          "Desenvolvi gestão de notas fiscais e fluxos financeiros rodando na AWS"
+        ],
+        "results": "Cerca de R$1 bilhão em notas fiscais processadas",
+        "techStack": [
+          "ReactJS",
+          "Redux",
+          "Context API",
+          "Single-SPA",
+          "PHP (Laravel)",
+          "Node.js",
+          "AWS",
+          "Azure DevOps"
+        ]
+      }
+    ]
+  },
+  "aiFirst": {
+    "title": "Engenharia AI-First",
+    "subtitle": "IA faz parte de como eu entrego todos os dias — com julgamento de engenharia, testes e code review no comando.",
+    "metrics": [
+      {
+        "value": "91,7%",
+        "label": "menos tempo de execução em tarefas menores"
+      },
+      {
+        "value": "66,7%",
+        "label": "menos tempo de execução em tarefas maiores"
+      }
+    ],
+    "points": [
+      "Claude e Gemini no meu fluxo diário para código, code review e automação de fluxos de trabalho",
+      "Criei agentes customizados, fontes de conhecimento e comandos rápidos no Stackspot AI com integração ao VSCode, levando ferramentas de IA para o dia a dia de todo o time",
+      "Este site é mantido com agentes e skills do Claude Code para revisão de arquitetura, implementação, SEO e checagens de release"
+    ],
+    "repoLink": "Veja como este site é construído →"
+  },
+  "skillsSection": {
+    "title": "Habilidades",
+    "groups": [
+      {
+        "name": "React & Mobile",
+        "items": [
+          "ReactJS",
+          "Next.js",
+          "React Native (iOS/Android)",
+          "TypeScript",
+          "JavaScript"
+        ]
+      },
+      {
+        "name": "Arquitetura",
+        "items": [
+          "Micro-frontends (Single-SPA)",
+          "Design systems",
+          "Arquitetura orientada a componentes",
+          "Otimização de performance"
+        ]
+      },
+      {
+        "name": "Estado & Dados",
+        "items": ["React Query", "Redux", "Zustand", "Context API", "GraphQL"]
+      },
+      {
+        "name": "Testes & Qualidade",
+        "items": [
+          "Jest",
+          "Stryker Mutator",
+          "Cypress",
+          "Playwright",
+          "SonarCloud"
+        ]
+      },
+      {
+        "name": "DevOps",
+        "items": [
+          "Docker",
+          "Kubernetes",
+          "GitHub Actions",
+          "ArgoCD",
+          "Jenkins",
+          "Azure DevOps",
+          "Grafana"
+        ]
+      },
+      {
+        "name": "Back-End & Dados",
+        "items": [
+          "Node.js (Express)",
+          "PHP (Laravel)",
+          "PostgreSQL",
+          "MySQL",
+          "MongoDB",
+          "Redis"
+        ]
+      }
+    ]
+  },
+  "education": {
+    "title": "Formação e Idiomas",
+    "items": [
+      {
+        "degree": "Pós-graduação — Inteligência Artificial e Ciência de Dados",
+        "school": "UniEvangélica",
+        "period": "2025 – 2026 (em andamento)"
+      },
+      {
+        "degree": "Bacharelado — Engenharia de Software",
+        "school": "UniEvangélica",
+        "period": "2018 – 2021"
+      }
+    ],
+    "languages": "Português — Nativo · Inglês — Proficiência profissional plena"
+  },
+  "featuredProjects": "Open source e projetos pessoais",
+  "noProjects": "Nenhum projeto encontrado.",
+  "seeOnGithub": "Ver no GitHub →",
+  "seeMore": "Ver mais",
   "letsWork": "Vamos trabalhar juntos",
+  "contactSubtitle": "Conte sobre o seu produto, time ou vaga.",
   "name": "Nome",
   "message": "Mensagem",
-  "placeholderMessage": "Oi Atirson, vi seu portfólio e adoraria trabalhar/colaborar com você",
+  "placeholderMessage": "Oi Atirson, vi seu portfólio e gostaria de conversar sobre uma vaga/projeto",
   "sendMessage": "Enviar mensagem",
   "sendingMessage": "Enviando mensagem...",
   "sentMessage": "Mensagem enviada com sucesso! ✅",
   "errorSendingMessage": "Erro ao enviar mensagem.",
   "downloadResume": "Baixar currículo",
-  "seeOnGithub": "Ver no Github",
-  "sections": {
-    "realProjects": "Projetos Reais",
-    "youtube": "Youtube",
-    "publishedArticles": "Artigos Publicados",
-    "workSetup": "Setup de Trabalho"
-  },
   "hero": {
     "images": [
-      { "src": "/atirson.jpg", "alt": "Atirson Fabiano — Desenvolvedor Front-End" },
-      { "src": "/atirson-2.jpg", "alt": "Setup de trabalho" },
-      { "src": "/atirson-3.jpg", "alt": "Atirson apresentando projeto" }
-    ]
-  },
-  "realProjects": {
-    "subtitle": "Projetos de alto impacto que desenvolvi em empresas e clientes",
-    "viewProject": "Ver Projeto",
-    "projects": [
       {
-        "id": "vivo-fibra",
-        "title": "Vivo Fibra Residencial",
-        "company": "Vivo",
-        "link": "https://vivo.com.br/para-voce/produtos-e-servicos/planos-lite#/fibra",
-        "description": "Liderei o desenvolvimento frontend do zero até produção para Vivo Fibra Lite (cobrança via cartão de crédito — sem boletos mensais).",
-        "highlights": [
-          "Projetei a arquitetura frontend e defini as melhores práticas para qualidade de código, testes e performance",
-          "Implementei testes unitários e de mutação usando Jest e Stryker Mutator para aumentar a confiabilidade",
-          "Gerenciei busca e cache de dados com React Query para uma UX rápida e responsiva",
-          "Construí e mantive pipelines CI/CD com ArgoCD no Kubernetes; usei Grafana para monitoramento e observabilidade",
-          "Integrei Stackspot AI (Zup) para criar agentes, fontes de conhecimento e comandos rápidos com integração VSCode",
-          "Colaborei de perto com equipes de produto, backend e DevOps para garantir deploys suaves e operabilidade"
-        ],
-        "results": "Alcançamos 1.000.000+ visitas/mês e geramos mais de R$100k de receita mensal",
-        "techStack": [
-          "ReactJS",
-          "TypeScript",
-          "React Query",
-          "Jest",
-          "Stryker Mutator",
-          "Grafana",
-          "ArgoCD",
-          "Kubernetes",
-          "Stackspot AI",
-          "VSCode"
-        ]
+        "src": "/atirson.jpg",
+        "alt": "Atirson Fabiano — Senior React Engineer"
       },
       {
-        "id": "driveway",
-        "title": "Driveway",
-        "company": "Driveway (USA)",
-        "link": "https://www.driveway.com/",
-        "description": "Aprimorei a experiência de vendas de veículos desenvolvendo soluções de alta qualidade.",
-        "highlights": [
-          "Desenvolvi componentes de alta qualidade para o Design System",
-          "Investiguei e corrigi bugs, garantindo uma plataforma estável e confiável",
-          "Gerenciei ciclos de release, assegurando deploys suaves",
-          "Implementei testes unitários e comportamentais (Jest, Playwright) para manter a qualidade do código"
-        ],
-        "results": "Plataforma estável com alta qualidade de código e experiência de usuário aprimorada",
-        "techStack": [
-          "ReactJS",
-          "TypeScript",
-          "Jest",
-          "Playwright",
-          "Design System"
-        ]
+        "src": "/atirson-2.jpg",
+        "alt": "Atirson Fabiano no seu setup de trabalho"
       },
       {
-        "id": "natura-avon",
-        "title": "Vitrine - Natura e Avon",
-        "company": "Natura/Avon",
-        "link": "https://ciandt.com/br/pt-br/case-study/unificacao-e-inovacao-no-atendimento-consultoras-natura",
-        "description": "Liderei o desenvolvimento do Vitrine, um sistema avançado para consultoras.",
-        "highlights": [
-          "Otimizei performance, qualidade e confiabilidade, lidando com alto tráfego de forma eficiente",
-          "Escalei o sistema para suportar 100K+ requisições por minuto para 6M de consultoras ativas",
-          "Implementei arquitetura robusta para garantir disponibilidade e velocidade",
-          "Colaborei com times multidisciplinares para entregar uma solução de alto impacto"
-        ],
-        "results": "Sistema escalável suportando 6 milhões de consultoras ativas com 100K+ requisições/minuto",
-        "techStack": [
-          "ReactJS",
-          "TypeScript",
-          "Performance Optimization",
-          "High Scalability",
-          "Microservices"
-        ]
+        "src": "/atirson-3.jpg",
+        "alt": "Atirson Fabiano apresentando um projeto"
       }
-    ]
+    ],
+    "selectImage": "Mostrar imagem {n}"
   },
   "youtube": {
     "channelName": "@atirson-dev",
@@ -157,31 +391,6 @@
         "link": "https://medium.com/@atirson.oliveira/running-the-krakend-api-gateway-on-heroku-7e10186d07e3",
         "platform": "Medium"
       }
-    ]
-  },
-  "workSetup": {
-    "subtitle": "Meu ambiente de trabalho e ferramentas de produtividade",
-
-    "categories": {
-      "hardware": "💻 Hardware & Máquinas",
-      "peripherals": "⌨️ Periféricos & Entradas",
-      "monitors": "🖥️ Display & Visual",
-      "audioVideo": "🎙️ Áudio, Vídeo & Luz",
-      "furniture": "🪑 Ergonomia & Móveis"
-    },
-    "items": [
-      { "category": "hardware", "emoji": "🍎", "name": "Mac Mini M4", "specs": "Apple Silicon" },
-      { "category": "hardware", "emoji": "🎮", "name": "Dell G15 2023", "specs": "i5 12500h • RTX3050 • 24GB DDR5" },
-      { "category": "peripherals", "emoji": "⌨️", "name": "Logitech 613", "specs": "Teclado Mecânico Wireless" },
-      { "category": "peripherals", "emoji": "🖱️", "name": "Logitech Master 3S", "specs": "Mouse de Alta Precisão" },
-      { "category": "peripherals", "emoji": "🕹️", "name": "8BitDo Ultimate", "specs": "Controle para Lazer" },
-      { "category": "monitors", "emoji": "📏", "name": "LG 29\"", "specs": "Ultrawide Principal" },
-      { "category": "monitors", "emoji": "📐", "name": "LG 25\"", "specs": "Vertical (Código/Docs)" },
-      { "category": "audioVideo", "emoji": "🎧", "name": "Havit H2015BG", "specs": "Headset Gamer Wireless" },
-      { "category": "audioVideo", "emoji": "🎤", "name": "Fifine AM8", "specs": "Microfone Dinâmico" },
-      { "category": "audioVideo", "emoji": "📷", "name": "Emeet 4K Pixy", "specs": "Dual Cam AI" },
-      { "category": "audioVideo", "emoji": "💡", "name": "Blitzwolf Lightbar", "specs": "Iluminação de Monitor" },
-      { "category": "furniture", "emoji": "⚡", "name": "Mesa Ergodesk", "specs": "Ajuste Elétrico (1.60x0.80)" }
     ]
   }
 }

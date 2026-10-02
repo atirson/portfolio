@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const RATE_LIMIT_SECONDS = 30;
 const MAX_NAME_LENGTH = 100;
@@ -18,12 +18,10 @@ export async function POST(req: NextRequest) {
     const last = ipRateLimit.get(ip);
 
     if (last && now - last < RATE_LIMIT_SECONDS * 1000) {
-      const wait = Math.ceil(
-        (RATE_LIMIT_SECONDS * 1000 - (now - last)) / 1000
-      );
+      const wait = Math.ceil((RATE_LIMIT_SECONDS * 1000 - (now - last)) / 1000);
       return NextResponse.json(
         { error: `Aguarde ${wait}s antes de enviar novamente.` },
-        { status: 429 }
+        { status: 429 },
       );
     }
 
@@ -39,7 +37,7 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json(
         { error: "Preencha todos os campos." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,17 +48,14 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json(
         { error: "Limite de caracteres excedido." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Regex simples para validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Email inválido." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email inválido." }, { status: 400 });
     }
 
     // Envia para ntfy.sh
@@ -72,7 +67,7 @@ export async function POST(req: NextRequest) {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Falha ao enviar notificação." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -82,7 +77,7 @@ export async function POST(req: NextRequest) {
     console.error("Erro no envio:", e);
     return NextResponse.json(
       { error: "Erro interno do servidor." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

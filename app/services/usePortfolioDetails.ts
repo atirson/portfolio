@@ -1,5 +1,5 @@
-import { gql } from 'graphql-request';
-import { hygraph } from '../lib/hygraph';
+import { gql } from "graphql-request";
+import { hygraph } from "../lib/hygraph";
 
 const GET_PROJECTS = gql`
   query GetProjects {
@@ -23,9 +23,11 @@ export type Project = {
   tags: string[];
 };
 
-export async function useGetProjects(): Promise<Project[]> {
-  const data: any = await hygraph.request(GET_PROJECTS);
-  return data.projects[0]?.projects as Project[];
+type ProjectsResponse = { projects: { projects: Project[] }[] };
+
+export async function getProjects(): Promise<Project[]> {
+  const data = await hygraph.request<ProjectsResponse>(GET_PROJECTS);
+  return data.projects[0]?.projects ?? [];
 }
 
 export type Skill = {
@@ -44,12 +46,10 @@ const GET_SKILLS = gql`
   }
 `;
 
-
-export async function useGetSkills(): Promise<Skill[]> {
-  const data: any = await hygraph.request(GET_SKILLS);
+export async function getSkills(): Promise<Skill[]> {
+  const data = await hygraph.request<{ skills?: Skill[] }>(GET_SKILLS);
   return data.skills || [];
 }
-
 
 const GET_PERSONAL_INFO = gql`
   query GetPersonalInfo {
@@ -76,12 +76,9 @@ export type PersonalInfo = {
   resumePt: Resume;
 };
 
-export async function useGetPersonalInfo(): Promise<PersonalInfo | null> {
-  const data: any = await hygraph.request(GET_PERSONAL_INFO);
-  
-  if (data.informations && data.informations.length > 0) {
-    return data.informations[0] as PersonalInfo;
-  }
-  
-  return null;
+export async function getPersonalInfo(): Promise<PersonalInfo | null> {
+  const data = await hygraph.request<{ informations?: PersonalInfo[] }>(
+    GET_PERSONAL_INFO,
+  );
+  return data.informations?.[0] ?? null;
 }

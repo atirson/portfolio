@@ -1,11 +1,16 @@
 export const GA_TRACKING_ID = "G-Z36DMC9GRF";
 
-export const sendGAEvent = (
-  eventName: string,
-  eventParams?: Record<string, any>
-) => {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", eventName, eventParams);
+type GAParams = Record<string, string | number | boolean | undefined>;
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+export const sendGAEvent = (eventName: string, eventParams?: GAParams) => {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", eventName, eventParams);
   }
 };
 
@@ -30,7 +35,7 @@ export const logClick = (label: string) => {
 export const logLinkTreeClick = (
   linkId: string,
   linkTitle: string,
-  linkUrl: string
+  linkUrl: string,
 ) => {
   sendGAEvent("linktree_click", {
     link_id: linkId,

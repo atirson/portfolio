@@ -9,33 +9,38 @@
     "enabled": true
   },
   "files": {
-    "ignore": [
-      "node_modules",
-      ".next",
-      "build",
-      "out",
-      "dist"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/build",
+      "!**/out",
+      "!**/dist"
     ],
     "ignoreUnknown": false
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "tab"
+    "indentStyle": "space",
+    "indentWidth": 2
   },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
-    }
-  },
-  "typescript": {
-    "formatter": {
-      "quoteStyle": "double"
+      "recommended": true,
+      "performance": {
+        "noImgElement": "off"
+      }
     }
   },
   "vcs": {
