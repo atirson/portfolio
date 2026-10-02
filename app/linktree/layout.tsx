@@ -1,9 +1,8 @@
 // app/linktree/layout.tsx
-import type { Metadata } from "next";
 import Script from "next/script";
 import "../globals.css";
-import { Providers } from "./provider";
 import { getRemoteFeatureFlags } from "@/app/lib/remote-flags";
+import { Providers } from "./provider";
 
 const GA_TRACKING_ID = "G-Z36DMC9GRF";
 
@@ -42,9 +41,7 @@ export default async function LinktreeLayout({
         </Script>
       </head>
       <body className="antialiased" cz-shortcut-listen="true">
-        <Providers remote={remote}>
-          {children}
-        </Providers>
+        <Providers remote={remote}>{children}</Providers>
       </body>
     </html>
   );

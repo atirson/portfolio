@@ -1,27 +1,20 @@
 "use client";
 
-import { useCallback, useState } from "react";
-
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
-}
-
-import Image from "next/image";
-import { useAnalytics } from "@/app/hooks/useAnalytics";
+import { FeatureGate, useFeatureFlag } from "feature-flow-js/react";
 import {
-  Globe,
-  Github,
-  Linkedin,
-  Youtube,
-  Mail,
-  Twitter,
   ArrowRight,
   Check,
+  Github,
+  Globe,
+  Linkedin,
+  Mail,
+  Twitter,
+  Youtube,
 } from "lucide-react";
+import Image from "next/image";
+import { useCallback } from "react";
+import { useAnalytics } from "@/app/hooks/useAnalytics";
 import { logLinkTreeClick } from "@/app/lib/gtag";
-import { useFeatureFlag, FeatureGate } from "feature-flow-js/react";
 
 // 🔗 Configuração central dos links (edite aqui)
 const LINKTREE_CONFIG = {
@@ -92,39 +85,17 @@ const LINKTREE_CONFIG = {
   ],
 };
 
-type AnalyticsState = {
-  [key: string]: {
-    clicks: number;
-    lastClick: string;
-    title: string;
-    url: string;
-  };
-};
-
 export default function LinktreePage() {
   // Hook global de analytics do seu projeto
   useAnalytics();
 
-  const isTopLinkHighlighted = useFeatureFlag('linktree-highlight-cta'); // local: off, remoto: on
-  const hasNewBadge = useFeatureFlag('linktree-new-badge'); // só remoto
-  const isHiddenBiosEnabled = useFeatureFlag('hidden-bio'); // só remoto
-
-  const [analyticsState, setAnalyticsState] = useState<AnalyticsState>({});
+  const isTopLinkHighlighted = useFeatureFlag("linktree-highlight-cta"); // local: off, remoto: on
+  const hasNewBadge = useFeatureFlag("linktree-new-badge"); // só remoto
+  const isHiddenBiosEnabled = useFeatureFlag("hidden-bio"); // só remoto
 
   const trackLinkClick = useCallback(
     (linkId: string, linkTitle: string, linkUrl: string) => {
       const timestamp = new Date().toISOString();
-
-      // Atualiza analytics local (para UI)
-      setAnalyticsState((prev) => ({
-        ...prev,
-        [linkId]: {
-          clicks: (prev[linkId]?.clicks || 0) + 1,
-          lastClick: timestamp,
-          title: linkTitle,
-          url: linkUrl,
-        },
-      }));
 
       // Envia analytics para o Google Analytics
       logLinkTreeClick(linkId, linkTitle, linkUrl);
@@ -136,7 +107,7 @@ export default function LinktreePage() {
         timestamp,
       });
     },
-    []
+    [],
   );
 
   type LinkItem = (typeof LINKTREE_CONFIG.links)[number];
@@ -237,14 +208,11 @@ export default function LinktreePage() {
                 </span>
               )}
             </h1>
-            {
-              !isHiddenBiosEnabled && (
-                <p className="text-black/70 text-base font-medium font-satoshi">
-                  {LINKTREE_CONFIG.profile.bio}
-                </p>
-              )
-            }
-            
+            {!isHiddenBiosEnabled && (
+              <p className="text-black/70 text-base font-medium font-satoshi">
+                {LINKTREE_CONFIG.profile.bio}
+              </p>
+            )}
           </div>
         </div>
 
@@ -271,13 +239,15 @@ export default function LinktreePage() {
           }
         >
           <p className="text-black/40 text-xs font-satoshi mt-8">
-            🔧 Social networks hidden by the "hidden-socials" local flag.
+            🔧 Social networks hidden by the &quot;hidden-socials&quot; local
+            flag.
           </p>
         </FeatureGate>
 
         <footer className="mt-8 text-center">
           <p className="text-black/50 text-sm font-satoshi">
-            If you want to use Feature Flow JS in your project, check the documentation below.
+            If you want to use Feature Flow JS in your project, check the
+            documentation below.
           </p>
           <a
             href="https://www.npmjs.com/package/feature-flow-js?activeTab=readme"

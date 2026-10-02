@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { photoUrl } from './gallery-data';
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { photoUrl } from "./gallery-data";
+
+const subscribeNoop = () => () => {};
 
 interface PhotoLightboxProps {
   photos: number[];
@@ -12,31 +14,44 @@ interface PhotoLightboxProps {
   primaryColor: string;
 }
 
-export default function PhotoLightbox({ photos, index, onClose, onNavigate, primaryColor }: PhotoLightboxProps) {
+export default function PhotoLightbox({
+  photos,
+  index,
+  onClose,
+  onNavigate,
+  primaryColor,
+}: PhotoLightboxProps) {
   const touchStartX = useRef<number | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // createPortal precisa de document: só renderiza no cliente
+  const mounted = useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
 
   const goPrev = () => onNavigate((index - 1 + photos.length) % photos.length);
   const goNext = () => onNavigate((index + 1) % photos.length);
 
+  // Mantém os handlers mais recentes sem reinstalar o listener a cada foto
+  const handlersRef = useRef({ onClose, goPrev, goNext });
+  useEffect(() => {
+    handlersRef.current = { onClose, goPrev, goNext };
+  });
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') goPrev();
-      if (e.key === 'ArrowRight') goNext();
+      const handlers = handlersRef.current;
+      if (e.key === "Escape") handlers.onClose();
+      if (e.key === "ArrowLeft") handlers.goPrev();
+      if (e.key === "ArrowRight") handlers.goNext();
     };
-    document.addEventListener('keydown', onKeyDown);
-    document.body.style.overflow = 'hidden';
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = '';
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index]);
+  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -62,15 +77,17 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
       onTouchEnd={handleTouchEnd}
     >
       <button
+        type="button"
         onClick={onClose}
         aria-label="Fechar visualizador"
         className="absolute inset-0 bg-black/90 cursor-default"
       ></button>
 
       <button
+        type="button"
         onClick={onClose}
         className="absolute top-4 right-4 md:top-6 md:right-6 w-11 h-11 rounded-full flex items-center justify-center text-white text-xl shadow-lg z-10"
-        style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+        style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
         aria-label="Fechar"
       >
         <i className="fas fa-times"></i>
@@ -78,12 +95,13 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
 
       <div
         className="absolute top-4 left-4 md:top-6 md:left-6 px-4 py-2 rounded-full text-white text-sm font-semibold z-10"
-        style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+        style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
       >
         {index + 1} / {photos.length}
       </div>
 
       <button
+        type="button"
         onClick={goPrev}
         className="absolute left-2 md:left-6 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-10 transition-transform hover:scale-110"
         style={{ backgroundColor: primaryColor }}
@@ -92,6 +110,8 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
         <i className="fas fa-chevron-left text-white text-xl"></i>
       </button>
 
+      {/* Full-size photo of unknown aspect ratio, sized with max-w/max-h */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={photoUrl(photos[index])}
         alt={`Foto do casamento ${index + 1}`}
@@ -99,6 +119,7 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
       />
 
       <button
+        type="button"
         onClick={goNext}
         className="absolute right-2 md:right-6 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-10 transition-transform hover:scale-110"
         style={{ backgroundColor: primaryColor }}
@@ -107,6 +128,6 @@ export default function PhotoLightbox({ photos, index, onClose, onNavigate, prim
         <i className="fas fa-chevron-right text-white text-xl"></i>
       </button>
     </div>,
-    document.body
+    document.body,
   );
 }
