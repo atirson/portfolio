@@ -1,11 +1,46 @@
-import { ReactNode } from "react";
 import Script from "next/script";
+import type { ReactNode } from "react";
 import "@/app/globals.css";
 import type { Metadata } from "next";
+import { GA_TRACKING_ID } from "@/app/lib/gtag";
+import { LINKEDIN_URL, SITE_URL } from "@/app/lib/site";
 
 export async function generateStaticParams() {
   return [{ locale: "en" }, { locale: "pt" }];
 }
+
+const keywords = [
+  "Atirson Fabiano",
+  "Senior React Engineer",
+  "Senior Software Engineer",
+  "React",
+  "React Native",
+  "Next.js",
+  "TypeScript",
+  "Micro-frontends",
+  "Design Systems",
+  "AI-First Development",
+  "Remote",
+  "LATAM",
+];
+
+const meta = {
+  pt: {
+    title:
+      "Atirson Fabiano | Engenheiro React Sênior — React Web & React Native",
+    description:
+      "Engenheiro de Software Sênior especializado em React Web e React Native, TypeScript e Next.js. Arquitetura front-end, micro-frontends, design systems, performance e desenvolvimento AI-First para produtos de alto tráfego. Remoto a partir do Brasil.",
+    keywords,
+    locale: "pt_BR",
+  },
+  en: {
+    title: "Atirson Fabiano | Senior React Engineer — React Web & React Native",
+    description:
+      "Senior Software Engineer specializing in React Web and React Native, TypeScript and Next.js. Front-end architecture, micro-frontends, design systems, performance and AI-first development for high-traffic products. Remote from Brazil.",
+    keywords,
+    locale: "en_US",
+  },
+};
 
 export async function generateMetadata({
   params,
@@ -13,89 +48,25 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-
-  const isPortuguese = locale === "pt";
-
-  // ✅ Versão atualizada dos metadados multilíngues
-  const meta = {
-    pt: {
-      title: "Atirson Fabiano | Especialista Front-End e Engenheiro de Software",
-      description:
-        "Portfólio profissional de Atirson Fabiano — especialista em desenvolvimento front-end com sólidos conhecimentos em back-end usando Node.js e PHP. Experiência em React, Next.js e criação de aplicações modernas de alta performance.",
-      keywords: [
-        "Atirson Fabiano",
-        "Especialista Front-End",
-        "Desenvolvedor Full Stack",
-        "React",
-        "Next.js",
-        "Node.js",
-        "PHP",
-        "JavaScript",
-        "TypeScript",
-        "Portfolio",
-      ],
-      locale: "pt_BR",
-      canonical: "https://atirson.com/pt",
-      ogTitle:
-        "Atirson Fabiano | Especialista Front-End com experiência em Back-End (Node.js e PHP)",
-      ogDescription:
-        "Descubra o portfólio de Atirson Fabiano — especialista em front-end com conhecimentos em back-end, apaixonado por criar interfaces performáticas e escaláveis utilizando React e Next.js.",
-    },
-    en: {
-      title: "Atirson Fabiano | Front-End Specialist & Software Developer",
-      description:
-        "Professional portfolio of Atirson Fabiano — front-end specialist with strong back-end knowledge in Node.js and PHP. Experienced in React, Next.js, and building high-performance modern applications.",
-      keywords: [
-        "Atirson Fabiano",
-        "Front-End Specialist",
-        "Full Stack Developer",
-        "React",
-        "Next.js",
-        "Node.js",
-        "PHP",
-        "JavaScript",
-        "TypeScript",
-        "Portfolio",
-      ],
-      locale: "en_US",
-      canonical: "https://atirson.com/en",
-      ogTitle:
-        "Atirson Fabiano | Front-End Specialist with Back-End Experience (Node.js & PHP)",
-      ogDescription:
-        "Explore Atirson Fabiano's portfolio — front-end specialist with back-end experience using Node.js and PHP, focused on building scalable web applications with React and Next.js.",
-    },
-  };
-
-  const data = isPortuguese ? meta.pt : meta.en;
+  const data = locale === "pt" ? meta.pt : meta.en;
+  const canonical = `${SITE_URL}/${locale === "pt" ? "pt" : "en"}`;
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: data.title,
     description: data.description,
     keywords: data.keywords,
-    authors: [
-      {
-        name: "Atirson Fabiano",
-        url: "https://www.linkedin.com/in/atirson-fabiano/",
-      },
-    ],
+    authors: [{ name: "Atirson Fabiano", url: LINKEDIN_URL }],
     creator: "Atirson Fabiano",
     publisher: "Atirson Fabiano",
 
     openGraph: {
-      title: data.ogTitle,
-      description: data.ogDescription,
-      url: data.canonical,
+      title: data.title,
+      description: data.description,
+      url: canonical,
       siteName: "Atirson Fabiano",
       locale: data.locale,
       type: "website",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: "Atirson Fabiano — Front-End Specialist & Software Developer",
-        },
-      ],
     },
 
     twitter: {
@@ -103,7 +74,6 @@ export async function generateMetadata({
       title: data.title,
       description: data.description,
       creator: "@atirson_dev",
-      images: ["/og-image.png"],
     },
 
     icons: {
@@ -111,11 +81,11 @@ export async function generateMetadata({
     },
 
     alternates: {
-      canonical: data.canonical,
+      canonical,
       languages: {
-        "pt-BR": "https://atirson.com/pt",
-        "en-US": "https://atirson.com/en",
-        "x-default": "https://atirson.com",
+        "pt-BR": `${SITE_URL}/pt`,
+        "en-US": `${SITE_URL}/en`,
+        "x-default": SITE_URL,
       },
     },
   };
@@ -135,14 +105,14 @@ export default async function LocaleLayout({
       <head>
         <Script
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-Z36DMC9GRF`}
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-Z36DMC9GRF', {
+            gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
           `}
